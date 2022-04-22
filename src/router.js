@@ -26,7 +26,7 @@ const router = new VueRouter({
         {
             path: '/authentication',
             // redirect: '/authentication/login',
-            component: importComponent('Layout/NavbarLayout'),
+            component: importComponent('Layout/AuthenticationLayout'),
             children: [
                 // Choose Login
                 {

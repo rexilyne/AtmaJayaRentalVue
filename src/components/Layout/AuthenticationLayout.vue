@@ -7,7 +7,7 @@
                     <v-spacer></v-spacer>
 
                     <!-- <v-btn class="mr-3" outlined color="white" @click="register">Register</v-btn> -->
-                    <v-btn class="" outlined color="white" @click="login">Login</v-btn>
+                    <!-- <v-btn class="" outlined color="white" @click="login">Login</v-btn> -->
 
             <!-- <v-app-bar-title>TokoLaku.id</v-app-bar-title> -->
             <!-- <v-spacer> -->

@@ -1,116 +1,88 @@
 <template>
-    <div>
-        <v-app-bar app fixed clipped-left height="90" color="blue darken-4" elevation="4">
-            <v-row>
-                <v-app-bar-nav-icon class="mt-1 ml-3" color="white" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-                <v-col md="2">
-                    <div role="button" class="text-h5 font-weight-bold yellow--text ml-1" @click="home">
-                        Atma Jaya Rental
-                    </div>
-                </v-col>
-                <v-col md="1">
-                    <div role="button" class="text-h6 white--text ml-6" @click="bus">
-                        Bus
-                    </div>
-                </v-col >
-                <v-col md="1">
-                    <div role="button" class="text-h6 white--text ml-2" @click="kereta">
-                        Kereta
-                    </div>
-                </v-col>
-                <v-col md="1">
-                    <div role="button" class="text-h6 white--text ml-2" @click="pesawat">
-                        Pesawat
-                    </div>
-                </v-col>
-                <v-col md="6 text-right">
-                    <v-icon role="button" color="white" @click="logout">mdi-logout</v-icon>
-                </v-col>
-            </v-row>
-            <!-- <v-app-bar-title>TokoLaku.id</v-app-bar-title> -->
-            <!-- <v-spacer> -->
-        </v-app-bar>
-        <v-navigation-drawer v-model="drawer" app clipped>
-             <v-layout column align-center>
-               <v-flex class="mt-3"> 
-                   <v-img 
-                        :src="images.logo" 
-                        max-height="100"
-                        max-width="120"
-                        contain
-                    >
-                    </v-img>
-               </v-flex>
-          </v-layout>
-            <v-list dense nav>
-                <v-list-item
-                    v-for="item in items"
-                    :key="item.title"
-                    link
-                    tag="router-link"
-                    :to="item.to"
-                >
-                    <v-list-item-content>
-                        <v-list-item-title> {{ item.title }}</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-            </v-list>
-        </v-navigation-drawer>
-        <div class="pa-5">
-            <router-view></router-view>
-        </div>
+  <div>
+    <v-app-bar
+      app
+      fixed
+      clipped-left
+      height="90"
+      color="blue darken-4"
+      elevation="4"
+    >
+      <v-app-bar-nav-icon
+        @click.stop="drawer = !drawer"
+        color="yellow"
+      ></v-app-bar-nav-icon>
+      <div class="text-h6 font-weight-bold yellow--text mx-2">
+        Atma Jogja Rental
+      </div>
+      <v-spacer></v-spacer>
+      <v-icon role="button" color="white" @click="logout">mdi-logout</v-icon>
+
+      <!-- <v-btn class="mr-3" outlined color="white" @click="register">Register</v-btn> -->
+      <!-- <v-btn class="" outlined color="white" @click="login">Login</v-btn> -->
+
+      <!-- <v-app-bar-title>TokoLaku.id</v-app-bar-title> -->
+      <!-- <v-spacer> -->
+    </v-app-bar>
+    <v-navigation-drawer v-model="drawer" app clipped>
+      <v-list nav>
+        <v-list-item
+          v-for="item in items"
+          :key="item.title"
+          link
+          tag="router-link"
+          :to="item.to"
+        >
+          <v-list-item-icon>
+            <v-icon v-text="item.icon" medium></v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title> {{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <div class="pa-5">
+      <router-view></router-view>
     </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "Home",
-        data() {
-        return {
-                drawer: true,
-                items: [
-
-                    { title: "Profile", to: "/user/profile" },
-                    { title: "Order Bus", to: "/user/orderbus" },
-                    { title: "Order Kereta", to: "/user/orderkereta" },
-                    { title: "Order Pesawat", to: "/user/orderpesawat" },
-                ],
-                images: {
-                    logo: require('@/assets/logo_ajr_trans.png')
-                }
-            };
+export default {
+  name: "Dashboard",
+  data() {
+    return {
+      drawer: true,
+      items: [
+        {
+          icon: "mdi-account-circle",
+          title: "Profile",
+          to: "/manager/profile",
         },
-        methods: {
-            home() {
-                this.$router.push({
-                    name: 'Home',
-                });
-            },
+        {
+          icon: "mdi-calendar",
+          title: "Penjadwalan Pegawai",
+          to: "/manager/data/penjadwalan",
+        },
+        { icon: "mdi-sale", title: "List Promo", to: "/manager/data/promo" },
+      ],
+    };
+  },
+  methods: {
+    // home() {
+    //   this.$router.push({
+    //     name: "Welcome",
+    //   });
+    // },
 
-            bus() {
-                this.$router.push({
-                    name: 'List Bus',
-                });
-            },
-
-            kereta() {
-                this.$router.push({
-                    name: 'List Kereta',
-                });
-            },
-
-            pesawat() {
-                this.$router.push({
-                    name: 'List Pesawat',
-                });
-            },
-
-            logout() {
-                this.$http.post(this.$api + '/logout');
-                this.$router.push({
-                    name: 'Welcome',
-                });
-             }
-        }
-    }
+    logout() {
+        localStorage.removeItem("token");
+        this.$http.post(this.$api + "/logout/pegawai");
+        this.$router.push({
+            name: "Welcome",
+        });
+    },
+  },
+};
 </script>

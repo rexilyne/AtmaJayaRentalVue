@@ -1,5 +1,8 @@
 <template>
-  <v-app>
+  <v-app style="
+    background: -webkit-linear-gradient(to right, #245399, #248D99);
+    background: linear-gradient(to right, #245399, #248D99);
+  ">
     <router-view></router-view>
   </v-app>
 </template>

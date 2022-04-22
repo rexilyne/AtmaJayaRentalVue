@@ -15,17 +15,7 @@
 
                 <v-btn color="success" dark @click="dialog = true"> Tambah </v-btn>
             </v-card-title>
-            <v-data-table :headers="headers" :items="pegawais" :search="search" :loading="load">
-                <template v-slot:[`item.id_role`]="{ item }">
-                  <div v-if="item.id_role === 1">Manager</div>
-                  <div v-if="item.id_role === 2">Administrasi</div>
-                  <div v-if="item.id_role === 3">Customer Service</div>
-                </template>
-                <template v-slot:[`item.url_foto`]="{ item }">
-            <div class="p-2">
-              <v-img :src="item.url_foto" alt="-" height="100px" width="100px"></v-img>
-            </div>
-          </template>
+            <v-data-table :headers="headers" :items="pemilik_mobils" :search="search" :loading="load">
                 <template v-slot:[`item.actions`]="{ item }">
                    <v-icon aria-label="update" role="button" aria-hidden="false" color="green" small class="mr-2" @click="editHandler(item)">
                         mdi-pencil
@@ -90,46 +80,30 @@
                dialogConfirm: false,
                headers: [
                    { 
-                       text: "ID Pegawai",
+                       text: "ID Pemilik Mobil",
                        align: "start",
                        sortable: true,
-                       value: "id_pegawai"
+                       value: "id_pemilik_mobil"
                    },
                    {
-                       text: "Status Akun",
-                       value: "status_akun"
-                   },
-                   {
-                       text: "Role",
-                       value: "id_role"
+                       text: "Status Pemilik",
+                       value: "status_pemilik"
                    },
                    {
                        text: "Nama",
                        value: "nama"
                    },
                    {
+                       text: "Nomor KTP",
+                       value: "no_ktp"
+                   },
+                   {
                        text: "Alamat",
                        value: 'alamat'
                    },
                    {
-                       text: "Tanggal Lahir",
-                       value: 'tanggal_lahir'
-                   },
-                   {
-                       text: "Jenis Kelamin",
-                       value: 'jenis_kelamin'
-                   },
-                   {
-                       text: "Email",
-                       value: 'email'
-                   },
-                   {
                        text: "Nomor Telepon",
                        value: 'no_telp'
-                   },
-                   {
-                       text: "Image",
-                       value: 'url_foto'
                    },
                    {
                        text: "Actions",
@@ -137,7 +111,7 @@
                    }
                ],
                course: new FormData,
-               pegawais: [],
+               pemilik_mobils: [],
                form: {
                    nama_kelas: null,
                    kode: null,
@@ -158,13 +132,13 @@
            },
            // Read Data Courses
            readData() {
-               var url = this.$api + '/keloladata/pegawai';
+               var url = this.$api + '/keloladata/pemilikmobil';
                this.$http.get(url, {
                    headers: {
                        'Authorization' : 'Bearer ' + localStorage.getItem('token')
                    }
                }).then(response => {
-                   this.pegawais = response.data.data;
+                   this.pemilik_mobils = response.data.data;
                })
            },
            // Simpan data Course
