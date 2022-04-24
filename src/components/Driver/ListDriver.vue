@@ -141,6 +141,10 @@
     <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{
       error_message
     }}</v-snackbar>
+    <v-overlay :value="overlay"><v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular></v-overlay>
   </v-main>
 </template>
 
@@ -149,6 +153,7 @@ export default {
   name: "List",
   data() {
     return {
+      overlay: false,
       inputType: "Tambah",
       load: false,
       snackbar: false,
@@ -247,6 +252,7 @@ export default {
     },
     // Read Data Courses
     readData() {
+      this.overlay = true;
       var url = this.$api + "/keloladata/driver";
       this.$http
         .get(url, {
@@ -256,6 +262,7 @@ export default {
         })
         .then((response) => {
           this.drivers = response.data.data;
+          this.overlay = false;
         });
     },
     // Simpan data Course

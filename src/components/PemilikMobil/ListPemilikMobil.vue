@@ -33,10 +33,10 @@
                 </v-card-title>
                 <v-card-text>
                     <v-container>
-                        <v-text-field v-model="form.nama_kelas" label="Nama Kelas" required></v-text-field>
-                        <v-text-field v-model="form.kode" label="Kode" required></v-text-field>
-                        <v-text-field v-model="form.biaya_pendaftaran" label="Biaya Pendaftaran" required></v-text-field>
-                        <v-text-field v-model="form.kapasitas" label="Kapasitas" required></v-text-field>
+                        <v-text-field v-model="form.nama" label="Nama" required></v-text-field>
+                        <v-text-field v-model="form.no_ktp" label="Nomor KTP" required></v-text-field>
+                        <v-text-field v-model="form.alamat" label="Alamat" required></v-text-field>
+                        <v-text-field v-model="form.no_telp" label="Nomor Telepon" required></v-text-field>
                     </v-container>
                     <v-card-actions>
                         <v-spacer></v-spacer>
@@ -52,7 +52,7 @@
                     <span class="headline">Warning!</span>
                 </v-card-title>
                 <v-card-text>
-                    Anda yakin ingin menghapus kelas ini?
+                    Anda yakin ingin menghapus pemilik mobil ini?
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -62,6 +62,10 @@
             </v-card>
         </v-dialog>
         <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{ error_message }}</v-snackbar>
+        <v-overlay :value="overlay"><v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular></v-overlay>
     </v-main>
 </template>
 
@@ -70,6 +74,7 @@
        name: "List",
        data() {
            return {
+               overlay: false,
                inputType: 'Tambah',
                load: false,
                snackbar: false,
@@ -110,13 +115,13 @@
                        value: 'actions'
                    }
                ],
-               course: new FormData,
+               pemilik_mobil: new FormData,
                pemilik_mobils: [],
                form: {
-                   nama_kelas: null,
-                   kode: null,
-                   biaya_pendaftaran: null,
-                   kapasitas: null
+                   nama: null,
+                   no_ktp: null,
+                   alamat: null,
+                   no_telp: null
                },
                deleteId: '',
                editId: ''
@@ -130,8 +135,9 @@
                    this.save();
                }
            },
-           // Read Data Courses
+ 
            readData() {
+               this.overlay = true;
                var url = this.$api + '/keloladata/pemilikmobil';
                this.$http.get(url, {
                    headers: {
@@ -139,18 +145,20 @@
                    }
                }).then(response => {
                    this.pemilik_mobils = response.data.data;
+                   this.overlay = false;
                })
            },
-           // Simpan data Course
-           save() {
-               this.course.append('nama_kelas', this.form.nama_kelas);
-               this.course.append('kode', this.form.kode);
-               this.course.append('biaya_pendaftaran', this.form.biaya_pendaftaran);
-               this.course.append('kapasitas', this.form.kapasitas);
 
-               var url = this.$api + '/course/'
+           save() {
+               this.pemilik_mobil.append('nama', this.form.nama);
+               this.pemilik_mobil.append('no_ktp', this.form.no_ktp);
+               this.pemilik_mobil.append('alamat', this.form.alamat);
+               this.pemilik_mobil.append('no_telp', this.form.no_telp);
+
+               var url = this.$api + '/keloladata/pemilikmobil/store'
                this.load = true;
-               this.$http.post(url, this.course, {
+               this.overlay = true;
+               this.$http.post(url, this.pemilik_mobil, {
                    headers: {
                        'Authorization' : 'Bearer ' + localStorage.getItem('token')
                    }
@@ -158,7 +166,8 @@
                    this.error_message = response.data.message;
                    this.color = "green";
                    this.snackbar = true;
-                   this.load = true;
+                   this.load = false;
+                   this.overlay = false;
                    this.close();
                    this.readData();
                    this.resetForm();
@@ -167,18 +176,20 @@
                    this.color = "red";
                    this.snackbar = true;
                    this.load = false;
+                   this.overlay = false;
                })
            },
-           // Ubah data Course
+
            update() {
                let newData = {
-                   nama_kelas : this.form.nama_kelas,
-                   kode : this.form.kode,
-                   biaya_pendaftaran : this.form.biaya_pendaftaran,
-                   kapasitas : this.form.kapasitas
+                   nama : this.form.nama,
+                   no_ktp : this.form.no_ktp,
+                   alamat : this.form.alamat,
+                   no_telp : this.form.no_telp
                };
-               var url = this.$api + '/course/' + this.editId;
+               var url = this.$api + '/keloladata/pemilikmobil/update/' + this.editId;
                this.load = true;
+               this.overlay = true;
                this.$http.put(url, newData, {
                    headers: {
                        'Authorization' : 'Bearer ' + localStorage.getItem('token')
@@ -188,6 +199,7 @@
                    this.color = "green";
                    this.snackbar = true;
                    this.load = false;
+                   this.overlay = false;
                    this.close();
                    this.readData();
                    this.resetForm();
@@ -197,12 +209,14 @@
                    this.color = "red";
                    this.snackbar = true;
                    this.load = false;
+                   this.overlay = false;
                })
            },
-           // Hapus data produk
+          
            deleteData() {
-               var url = this.$api + '/course/' + this.deleteId;
+               var url = this.$api + '/keloladata/pemilikmobil/delete/' + this.deleteId;
                this.load = true;
+               this.overlay = true;
                this.$http.delete(url, {
                    headers: {
                        'Authorization' : 'Bearer ' + localStorage.getItem('token')
@@ -212,6 +226,7 @@
                    this.color = "green";
                    this.snackbar = true;
                    this.load = false;
+                   this.overlay = false;
                    this.close();
                    this.readData();
                    this.resetForm();
@@ -221,15 +236,16 @@
                    this.color = "red";
                    this.snackbar = true;
                    this.load = false;
+                   this.overlay = false;
                })
            },
            editHandler(item) {
                this.inputType = 'Ubah';
                this.editId = item.id;
-               this.form.nama_kelas = item.nama_kelas;
-               this.form.kode = item.kode;
-               this.form.biaya_pendaftaran = item.biaya_pendaftaran;
-               this.form.kapasitas = item.kapasitas;
+               this.form.nama = item.nama;
+               this.form.no_ktp = item.no_ktp;
+               this.form.alamat = item.alamat;
+               this.form.no_telp = item.no_telp;
                this.dialog = true;
            },
            deleteHandler(id) {
@@ -251,10 +267,10 @@
            },
            resetForm() {
                this.form = {
-                   nama_kelas: null,
-                   kode: null,
-                   biaya_pendaftaran: null,
-                   kapasitas: null
+                   nama: null,
+                   no_ktp: null,
+                   alamat: null,
+                   no_telp: null
                };
            },
        },

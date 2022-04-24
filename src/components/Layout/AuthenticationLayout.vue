@@ -32,7 +32,11 @@
             home() {
                 this.$router.push({
                     name: 'Welcome',
-                });
+                }).catch(error => {
+  if (error.name != "NavigationDuplicated") {
+    throw error;
+  }
+});
             },
 
             // register() {

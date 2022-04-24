@@ -72,6 +72,10 @@
             </v-card>
         </v-dialog>
         <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{ error_message }}</v-snackbar>
+        <v-overlay :value="overlay"><v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular></v-overlay>
     </v-main>
 </template>
 
@@ -80,6 +84,7 @@
        name: "List",
        data() {
            return {
+               overlay: false,
                inputType: 'Tambah',
                load: false,
                snackbar: false,
@@ -136,13 +141,19 @@
                        value: 'actions'
                    }
                ],
-               course: new FormData,
+               pegawai: new FormData,
                pegawais: [],
                form: {
-                   nama_kelas: null,
-                   kode: null,
-                   biaya_pendaftaran: null,
-                   kapasitas: null
+                   id_role: null,
+                   nama: null,
+                   alamat: null,
+                   tanggal_lahir: null,
+                   jenis_kelamin: null,
+                   email: null,
+                   no_telp: null,
+                   password: null,
+                   url_foto: null,
+                   url_foto_web: null
                },
                deleteId: '',
                editId: ''
@@ -158,6 +169,7 @@
            },
            // Read Data Courses
            readData() {
+               this.overlay = true;
                var url = this.$api + '/keloladata/pegawai';
                this.$http.get(url, {
                    headers: {
@@ -165,6 +177,7 @@
                    }
                }).then(response => {
                    this.pegawais = response.data.data;
+                   this.overlay = false;
                })
            },
            // Simpan data Course
@@ -277,10 +290,16 @@
            },
            resetForm() {
                this.form = {
-                   nama_kelas: null,
-                   kode: null,
-                   biaya_pendaftaran: null,
-                   kapasitas: null
+                   id_role: null,
+                   nama: null,
+                   alamat: null,
+                   tanggal_lahir: null,
+                   jenis_kelamin: null,
+                   email: null,
+                   no_telp: null,
+                   password: null,
+                   url_foto: null,
+                   url_foto_web: null
                };
            },
        },

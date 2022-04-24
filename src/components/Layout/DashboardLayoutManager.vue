@@ -61,7 +61,7 @@ export default {
           to: "/manager/profile",
         },
         {
-          icon: "mdi-calendar",
+          icon: "mdi-account-edit",
           title: "Penjadwalan Pegawai",
           to: "/manager/data/penjadwalan",
         },
@@ -77,8 +77,12 @@ export default {
     // },
 
     logout() {
+        this.$http.post(this.$api + "/logout/pegawai", localStorage.getItem("user"), {
+                   headers: {
+                       'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                   }
+               });
         localStorage.removeItem("token");
-        this.$http.post(this.$api + "/logout/pegawai");
         this.$router.push({
             name: "Welcome",
         });

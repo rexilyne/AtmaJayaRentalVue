@@ -61,6 +61,11 @@ export default {
           to: "/customerservice/profile",
         },
         {
+          icon: "mdi-calendar",
+          title: "Jadwal Kerja",
+          to: "/customerservice/jadwal"
+        },
+        {
           icon: "mdi-face",
           title: "List Customer",
           to: "/customerservice/data/customer",
@@ -76,10 +81,14 @@ export default {
     // },
 
     logout() {
+        this.$http.post(this.$api + "/logout/pegawai", localStorage.getItem("user"), {
+                   headers: {
+                       'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                   }
+               });
         localStorage.removeItem("token");
-        this.$http.post(this.$api + "/logout/pegawai");
         this.$router.push({
-          name: "Welcome",
+            name: "Welcome",
         });
     },
   },

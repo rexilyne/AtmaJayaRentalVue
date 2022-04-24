@@ -85,6 +85,10 @@
             </v-card>
         </v-dialog>
         <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{ error_message }}</v-snackbar>
+        <v-overlay :value="overlay"><v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular></v-overlay>
     </v-main>
 </template>
 
@@ -93,6 +97,7 @@
        name: "List",
        data() {
            return {
+               overlay: false,
                inputType: 'Tambah',
                load: false,
                snackbar: false,
@@ -171,6 +176,7 @@
            },
            // Read Data Courses
            readData() {
+               this.overlay = true;
                var url = this.$api + '/keloladata/customer';
                this.$http.get(url, {
                    headers: {
@@ -178,6 +184,7 @@
                    }
                }).then(response => {
                    this.customers = response.data.data;
+                   this.overlay = false;
                })
            },
            // Simpan data Course

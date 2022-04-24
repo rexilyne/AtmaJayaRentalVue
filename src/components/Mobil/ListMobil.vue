@@ -75,6 +75,10 @@
             </v-card>
         </v-dialog>
         <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{ error_message }}</v-snackbar>
+        <v-overlay :value="overlay"><v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular></v-overlay>
     </v-main>
 </template>
 
@@ -83,6 +87,7 @@
        name: "List",
        data() {
            return {
+               overlay: false,
                kontrakAkanHabis: false,
                inputType: 'Tambah',
                load: false,
@@ -202,6 +207,7 @@
            },
            // Read Data Courses
            readData() {
+               this.overlay = true;
                var url = this.$api + '/keloladata/mobil';
                this.$http.get(url, {
                    headers: {
@@ -209,6 +215,7 @@
                    }
                }).then(response => {
                    this.mobils = response.data.data;
+                   this.overlay = false;
                })
            },
            // Simpan data Course

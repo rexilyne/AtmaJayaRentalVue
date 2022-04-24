@@ -71,8 +71,12 @@ export default {
     // },
 
     logout() {
+        this.$http.post(this.$api + "/logout/customer", localStorage.getItem("user"), {
+                   headers: {
+                       'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                   }
+               });
         localStorage.removeItem("token");
-        this.$http.post(this.$api + "/logout/customer");
         this.$router.push({
             name: "Welcome",
         });

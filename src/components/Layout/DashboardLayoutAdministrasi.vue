@@ -45,6 +45,9 @@
     <div class="pa-5">
       <router-view></router-view>
     </div>
+    <v-overlay :value="overlay"
+      ><v-progress-circular indeterminate size="64"></v-progress-circular
+    ></v-overlay>
   </div>
 </template>
 
@@ -53,6 +56,7 @@ export default {
   name: "Dashboard",
   data() {
     return {
+      overlay: false,
       drawer: true,
       items: [
         {
@@ -61,26 +65,58 @@ export default {
           to: "/administrasi/profile",
         },
         {
+          icon: "mdi-calendar",
+          title: "Jadwal Kerja",
+          to: "/administrasi/jadwal",
+        },
+        {
           icon: "mdi-card-account-details",
           title: "List Driver",
           to: "/administrasi/data/driver",
         },
-        { icon: "mdi-car", title: "List Mobil", to: "/administrasi/data/mobil" },
-        { icon: "mdi-handshake", title: "List Pemilik Mobil", to: "/administrasi/data/pemilikmobil" },
-        { icon: "mdi-office-building", title: "List Pegawai", to: "/administrasi/data/pegawai" },
+        {
+          icon: "mdi-car",
+          title: "List Mobil",
+          to: "/administrasi/data/mobil",
+        },
+        {
+          icon: "mdi-handshake",
+          title: "List Pemilik Mobil",
+          to: "/administrasi/data/pemilikmobil",
+        },
+        {
+          icon: "mdi-office-building",
+          title: "List Pegawai",
+          to: "/administrasi/data/pegawai",
+        },
       ],
     };
   },
   methods: {
     home() {
-      this.$router.push({
-        name: "Welcome",
-      });
+      this.$router
+        .push({
+          name: "Welcome",
+        })
+        .catch((error) => {
+          if (error.name != "NavigationDuplicated") {
+            throw error;
+          }
+        });
     },
 
     logout() {
+      this.overlay = true;
+      this.$http
+        .post(this.$api + "/logout/pegawai", localStorage.getItem("user"), {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then(() => {
+          this.overlay = false;
+        });
       localStorage.removeItem("token");
-      this.$http.post(this.$api + "/logout/pegawai");
       this.$router.push({
         name: "Welcome",
       });

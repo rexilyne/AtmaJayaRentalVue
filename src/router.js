@@ -118,6 +118,14 @@ const router = new VueRouter({
                     name: 'Administrasi Profile',
                     meta: { title: 'Administrasi Profile' },
                     component: importComponent('Pegawai/PegawaiProfile')
+                },
+
+                // Jadwal Kerja
+                {
+                    path: '/administrasi/jadwal',
+                    name: 'Jadwal Administrasi',
+                    meta: { title: 'Jadwal Administrasi'},
+                    component: importComponent('Jadwal/ListShiftPegawai')
                 }
             ]
         },
@@ -148,7 +156,15 @@ const router = new VueRouter({
                     name: 'Manager Profile',
                     meta: { title: 'Manager Profile' },
                     component: importComponent('Pegawai/PegawaiProfile')
-                }
+                },
+
+                // Jadwal Kerja
+                // {
+                //     path: '/manager/jadwal',
+                //     name: 'Jadwal Manager',
+                //     meta: { title: 'Jadwal Manager'},
+                //     component: importComponent('Jadwal/ListShiftPegawai')
+                // }
             ]
         },
 
@@ -170,6 +186,14 @@ const router = new VueRouter({
                     name: 'Customer Service Profile',
                     meta: { title: 'Customer Service Profile' },
                     component: importComponent('Pegawai/PegawaiProfile')
+                },
+
+                // Jadwal Kerja
+                {
+                    path: '/customerservice/jadwal',
+                    name: 'Jadwal Customer Service',
+                    meta: { title: 'Jadwal Customer Service'},
+                    component: importComponent('Jadwal/ListShiftPegawai')
                 }
             ]
         },

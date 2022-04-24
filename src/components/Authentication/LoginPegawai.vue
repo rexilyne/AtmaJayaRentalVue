@@ -46,6 +46,10 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <v-overlay :value="overlay"><v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular></v-overlay>
   </v-main>
 </template>
 
@@ -54,6 +58,7 @@ export default {
   name: "Login",
   data() {
     return {
+      overlay: false,
       load: false,
       snackbar: false,
       error_message: "",
@@ -67,6 +72,7 @@ export default {
   },
   methods: {
     submit() {
+      this.overlay = true;
       if (this.$refs.form.validate()) {
         // cek validasi data yang terkirim
         this.load = true;
@@ -80,11 +86,13 @@ export default {
             // localStorage.setItem("id", response.data.user.id);
             localStorage.setItem("id_pegawai", response.data.user.id_pegawai);
             localStorage.setItem("id_role", response.data.user.id_role);
+            localStorage.setItem("user", response.data.user);
             localStorage.setItem("token", response.data.access_token);
             this.error_message = response.data.message;
             this.color = "green";
             this.snackbar = true;
             this.load = false;
+            this.overlay = false;
             this.clear();
 
             if(response.data.user.id_role == 1) {
@@ -111,6 +119,7 @@ export default {
             this.snackbar = true;
             localStorage.removeItem("token");
             this.load = false;
+            this.overlay = false;
           });
       }
     },
