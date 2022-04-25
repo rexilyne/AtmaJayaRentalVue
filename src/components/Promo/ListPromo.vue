@@ -171,10 +171,10 @@ export default {
       promo: new FormData(),
       promos: [],
       form: {
-        kode_promo: null,
-        jenis_promo: null,
-        keterangan: null,
-        diskon_promo: null,
+        kode_promo: "",
+        jenis_promo: "",
+        keterangan: "",
+        diskon_promo: "",
         status_promo: "Aktif",
       },
       deleteId: "",
@@ -352,10 +352,10 @@ export default {
     },
     resetForm() {
       this.form = {
-        kode_promo: null,
-        jenis_promo: null,
-        keterangan: null,
-        diskon_promo: null,
+        kode_promo: "",
+        jenis_promo: "",
+        keterangan: "",
+        diskon_promo: "",
         status_promo: "Aktif",
       };
     },

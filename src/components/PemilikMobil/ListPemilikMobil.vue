@@ -165,10 +165,10 @@ export default {
       pemilik_mobil: new FormData(),
       pemilik_mobils: [],
       form: {
-        nama: null,
-        no_ktp: null,
-        alamat: null,
-        no_telp: null,
+        nama: "",
+        no_ktp: "",
+        alamat: "",
+        no_telp: "",
       },
       deleteId: "",
       editId: "",
@@ -332,10 +332,10 @@ export default {
     },
     resetForm() {
       this.form = {
-        nama: null,
-        no_ktp: null,
-        alamat: null,
-        no_telp: null,
+        nama: "",
+        no_ktp: "",
+        alamat: "",
+        no_telp: "",
       };
     },
   },

@@ -97,7 +97,7 @@
               <v-col>
                 <v-text-field
                   label="Nama"
-                  v-model="name"
+                  v-model="form.nama"
                   :rules="nameRules"
                   required
                 ></v-text-field>
@@ -105,7 +105,7 @@
               <v-col>
                 <v-text-field
                   label="Alamat"
-                  v-model="alamat"
+                  v-model="form.alamat"
                   required
                 ></v-text-field>
               </v-col>
@@ -123,7 +123,7 @@
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                      v-model="tanggal_lahir"
+                      v-model="form.tanggal_lahir"
                       label="Tanggal Lahir"
                       prepend-inner-icon="mdi-calendar"
                       readonly
@@ -132,14 +132,14 @@
                     ></v-text-field>
                   </template>
                   <v-date-picker
-                    v-model="tanggal_lahir"
+                    v-model="form.tanggal_lahir"
                     @input="menu2 = false"
                   ></v-date-picker>
                 </v-menu>
               </v-col>
               <v-col>
                 <v-select
-                  v-model="jeniskelamin"
+                  v-model="form.jenis_kelamin"
                   :items="jeniskelamins"
                   item-value="gender"
                   item-text="gender"
@@ -152,7 +152,7 @@
               <v-col>
                 <v-text-field
                   label="E-mail"
-                  v-model="email"
+                  v-model="form.email"
                   :rules="emailRules"
                   required
                 ></v-text-field>
@@ -160,7 +160,7 @@
               <v-col>
                 <v-text-field
                   label="Nomor Telepon"
-                  v-model="no_telp"
+                  v-model="form.no_telp"
                   required
                 ></v-text-field>
               </v-col>
@@ -168,10 +168,14 @@
 
             <v-row>
               <v-col>
-                <v-select label="Bahasa" />
+                <v-select label="Bahasa" 
+                v-model="form.bahasa"
+                  :items="bahasas"
+                  item-value="bahasa"
+                  item-text="bahasa"/>
               </v-col>
               <v-col>
-                <v-text-field label="Tarif Driver"></v-text-field>
+                <v-text-field label="Tarif Driver" v-model="form.tarif_driver"></v-text-field>
               </v-col>
             </v-row>
 
@@ -179,7 +183,7 @@
               <v-col>
                 <v-text-field
                   label="Password"
-                  v-model="password"
+                  v-model="form.password"
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showPassword ? 'text' : 'password'"
                   counter
@@ -190,56 +194,97 @@
               </v-col>
             </v-row>
 
-            <v-row>
-              <v-col>
-                <v-file-input
-                  v-model="image"
-                  type="file"
-                  class="input"
-                  label="Upload Foto"
-                  hint="Upload Foto"
-                  outlined
-                  dense
-                  @change="onFileChange"
-                />
-              </v-col>
-              <v-col>
-                <v-file-input
-                  v-model="image"
-                  type="file"
-                  class="input"
-                  label="Upload Foto"
-                  hint="Upload Foto"
-                  outlined
-                  dense
-                  @change="onFileChange"
-                />
-              </v-col>
-            </v-row>
+          <v-row>
+                  <v-col cols="6">
+                    <v-card>
+                      <v-img :src="form.url_sim" class="grey darken-4"></v-img>
+                      <v-card-title class="text-h6"> SIM </v-card-title>
+                    </v-card>
+                  </v-col>
+                  <v-col cols="6">
+                    <v-card>
+                      <v-img
+                        :src="form.url_surat_bebas_napza"
+                        class="grey darken-4"
+                      ></v-img>
+                      <v-card-title class="text-h6">
+                        Surat Bebas Napza
+                      </v-card-title>
+                    </v-card>
+                  </v-col>
+                </v-row>
 
             <v-row>
               <v-col>
                 <v-file-input
-                  v-model="image"
+                  v-model="image_SIM"
                   type="file"
                   class="input"
-                  label="Upload Foto"
-                  hint="Upload Foto"
+                  label="Upload SIM"
+                  hint="Upload SIM"
                   outlined
                   dense
-                  @change="onFileChange"
+                  @change="onFileChangeSIM"
                 />
               </v-col>
               <v-col>
                 <v-file-input
-                  v-model="image"
+                  v-model="image_surat_bebas_napza"
                   type="file"
                   class="input"
-                  label="Upload Foto"
-                  hint="Upload Foto"
+                  label="Upload Surat Bebas Napza"
+                  hint="Upload Surat Bebas Napza"
                   outlined
                   dense
-                  @change="onFileChange"
+                  @change="onFileChangeSuratBebasNapza"
+                />
+              </v-col>
+            </v-row>
+
+
+            <v-row>
+                  <v-col cols="6">
+                    <v-card>
+                      <v-img :src="form.url_surat_kesehatan_jiwa" class="grey darken-4"></v-img>
+                      <v-card-title class="text-h6"> Surat Kesehatan Jiwa </v-card-title>
+                    </v-card>
+                  </v-col>
+                  <v-col cols="6">
+                    <v-card>
+                      <v-img
+                        :src="form.url_skck"
+                        class="grey darken-4"
+                      ></v-img>
+                      <v-card-title class="text-h6">
+                        SKCK
+                      </v-card-title>
+                    </v-card>
+                  </v-col>
+                </v-row>
+
+            <v-row>
+              <v-col>
+                <v-file-input
+                  v-model="image_surat_kesehatan_jiwa"
+                  type="file"
+                  class="input"
+                  label="Upload Surat Kesehatan Jiwa"
+                  hint="Upload Surat Kesehatan Jiwa"
+                  outlined
+                  dense
+                  @change="onFileChangeSuratKesehatanJiwa"
+                />
+              </v-col>
+              <v-col>
+                <v-file-input
+                  v-model="image_skck"
+                  type="file"
+                  class="input"
+                  label="Upload SKCK"
+                  hint="Upload SKCK"
+                  outlined
+                  dense
+                  @change="onFileChangeSKCK"
                 />
               </v-col>
             </v-row>
@@ -287,6 +332,8 @@ export default {
   name: "List",
   data() {
     return {
+      showPassword: false,
+      menu2: false,
       overlayDialogTambahEdit: false,
       overlayDialogDelete: false,
       overlay: false,
@@ -369,24 +416,64 @@ export default {
       driver: new FormData(),
       drivers: [],
       form: {
-        status_akun: null,
-        nama: null,
-        alamat: null,
-        tanggal_lahir: null,
-        jenis_kelamin: null,
-        email: null,
-        no_telp: null,
-        bahasa: null,
-        status_driver: null,
-        password: null,
-        tarif_driver: null,
-        url_sim: null,
-        url_surat_bebas_napza: null,
-        url_surat_kesehatan_jiwa: null,
-        url_skck: null,
+        status_akun: "",
+        nama: "",
+        alamat: "",
+        tanggal_lahir: "",
+        jenis_kelamin: "",
+        email: "",
+        no_telp: "",
+        bahasa: "",
+        status_driver: "",
+        password: "",
+        tarif_driver: "",
+        rerata_rating: "",
+        url_sim: "",
+        url_surat_bebas_napza: "",
+        url_surat_kesehatan_jiwa: "",
+        url_skck: "",
       },
+      jeniskelamins: [
+        {
+          id: 1,
+          gender: "Laki-laki",
+        },
+        {
+          id: 2,
+          gender: "Perempuan",
+        },
+      ],
+      bahasas: [
+        {
+          id: 1,
+          bahasa: "Indonesia"
+        },
+        {
+          id: 2,
+          bahasa: "Inggris"
+        },
+        {
+          id: 3,
+          bahasa: "Indonesia & Inggris"
+        }
+      ],
       deleteId: "",
       editId: "",
+      nameRules: [(v) => !!v || "Required"],
+      passwordRules: [(v) => !!v || "Required"],
+      emailRules: [(v) => !!v || "Required"],
+      image_SIM: undefined,
+      image_surat_bebas_napza: undefined,
+      image_surat_kesehatan_jiwa: undefined,
+      image_skck: undefined,
+      b64_sim: "",
+      b64_surat_bebas_napza: "",
+      b64_surat_kesehatan_jiwa: "",
+      b64_skck: "",
+      imageStoreURL_SIM: "",
+      imageStoreURL_SuratBebasNapza: "",
+      imageStoreURL_SuratKesehatanJiwa: "",
+      imageStoreURL_SKCK: "",
     };
   },
   methods: {
@@ -445,7 +532,7 @@ export default {
       this.load = true;
       this.overlayDialogTambahEdit = true;
       this.$http
-        .post(url, this.course, {
+        .post(url, this.driver, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -482,6 +569,7 @@ export default {
         status_driver: this.form.status_driver,
         password: this.form.password,
         tarif_driver: this.form.tarif_driver,
+        rerata_rating: this.form.rerata_rating,
         url_sim: this.form.url_sim,
         url_surat_bebas_napza: this.form.url_surat_bebas_napza,
         url_surat_kesehatan_jiwa: this.form.url_surat_kesehatan_jiwa,
@@ -502,10 +590,11 @@ export default {
           this.snackbar = true;
           this.load = false;
           this.overlayDialogTambahEdit = false;
-          this.close();
-          this.readData();
-          this.resetForm();
-          this.inputType = "Tambah";
+          // this.close();
+          // this.readData();
+          // this.resetForm();
+          // this.inputType = "Tambah";
+          location.reload();
         })
         .catch((error) => {
           this.error_message = error.response.data.message;
@@ -557,7 +646,8 @@ export default {
       this.form.no_telp = item.no_telp;
       this.form.bahasa = item.bahasa;
       this.form.status_driver = item.status_driver;
-      this.form.tarif_driver = item.driver;
+      this.form.tarif_driver = item.tarif_driver;
+      this.form.rerata_rating = item.rerata_rating;
       this.form.url_sim = item.url_sim;
       this.form.url_surat_bebas_napza = item.url_surat_bebas_napza;
       this.form.url_surat_kesehatan_jiwa = item.url_surat_kesehatan_jiwa;
@@ -594,11 +684,176 @@ export default {
         status_driver: null,
         password: null,
         tarif_driver: null,
+        rerata_rating: null,
         url_sim: null,
         url_surat_bebas_napza: null,
         url_surat_kesehatan_jiwa: null,
         url_skck: null,
       };
+    },
+
+    //sim
+    createImageSIM(file) {
+      const readerSIM = new FileReader();
+
+      readerSIM.onloadend = (e) => {
+        this.b64_sim = e.target.result;
+        this.getImageStorageURL_SIM(this.b64_sim);
+      };
+
+      readerSIM.readAsDataURL(file);
+    },
+    onFileChangeSIM(file) {
+      if (!file) {
+        return;
+      }
+      this.createImageSIM(file);
+    },
+    getImageStorageURL_SIM(img_url) {
+      this.overlayDialogTambahEdit = true;
+      let newData = {
+        imgB64: img_url,
+      };
+      var url = this.$api + "/storeimage";
+      this.$http
+        .post(url, newData)
+        .then((response) => {
+          this.error_message = response.data.message;
+          this.color = "green";
+          this.snackbar = true;
+          this.imageStoreURL_SIM = response.data.data;
+          this.form.url_sim = response.data.data;
+          this.overlayDialogTambahEdit = false;
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.overlayDialogTambahEdit = false;
+        });
+    },
+
+    //surat bebas napza
+    createImageSuratBebasNapza(file) {
+      const readerSuratBebasNapza= new FileReader();
+
+      readerSuratBebasNapza.onloadend = (e) => {
+        this.b64_surat_bebas_napza = e.target.result;
+        this.getImageStorageURL_SuratBebasNapza(this.b64_surat_bebas_napza);
+      };
+
+      readerSuratBebasNapza.readAsDataURL(file);
+    },
+    onFileChangeSuratBebasNapza(file) {
+      if (!file) {
+        return;
+      }
+      this.createImageSuratBebasNapza(file);
+    },
+    getImageStorageURL_SuratBebasNapza(img_url) {
+      this.overlayDialogTambahEdit = true;
+      let newData = {
+        imgB64: img_url,
+      };
+      var url = this.$api + "/storeimage";
+      this.$http
+        .post(url, newData)
+        .then((response) => {
+          this.error_message = response.data.message;
+          this.color = "green";
+          this.snackbar = true;
+          this.imageStoreURL_SuratBebasNapza = response.data.data;
+          this.form.url_surat_bebas_napza = response.data.data;
+          this.overlayDialogTambahEdit = false;
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.overlayDialogTambahEdit = false;
+        });
+    },
+
+    //surat kesehatan jiwa
+    createImageSuratKesehatanJiwa(file) {
+      const readerSuratKesehatanJiwa = new FileReader();
+
+      readerSuratKesehatanJiwa.onloadend = (e) => {
+        this.b64_surat_kesehatan_jiwa = e.target.result;
+        this.getImageStorageURL_SuratKesehatanJiwa(this.b64_surat_kesehatan_jiwa);
+      };
+
+      readerSuratKesehatanJiwa.readAsDataURL(file);
+    },
+    onFileChangeSuratKesehatanJiwa(file) {
+      if (!file) {
+        return;
+      }
+      this.createImageSuratKesehatanJiwa(file);
+    },
+    getImageStorageURL_SuratKesehatanJiwa(img_url) {
+      this.overlayDialogTambahEdit = true;
+      let newData = {
+        imgB64: img_url,
+      };
+      var url = this.$api + "/storeimage";
+      this.$http
+        .post(url, newData)
+        .then((response) => {
+          this.error_message = response.data.message;
+          this.color = "green";
+          this.snackbar = true;
+          this.imageStoreURL_SuratKesehatanJiwa = response.data.data;
+          this.form.url_surat_kesehatan_jiwa = response.data.data;
+          this.overlayDialogTambahEdit = false;
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.overlayDialogTambahEdit = false;
+        });
+    },
+
+    //skck
+    createImageSKCK(file) {
+      const readerSKCK = new FileReader();
+
+      readerSKCK.onloadend = (e) => {
+        this.b64_skck = e.target.result;
+        this.getImageStorageURL_SKCK(this.b64_skck);
+      };
+
+      readerSKCK.readAsDataURL(file);
+    },
+    onFileChangeSKCK(file) {
+      if (!file) {
+        return;
+      }
+      this.createImageSKCK(file);
+    },
+    getImageStorageURL_SKCK(img_url) {
+      this.overlayDialogTambahEdit = true;
+      let newData = {
+        imgB64: img_url,
+      };
+      var url = this.$api + "/storeimage";
+      this.$http
+        .post(url, newData)
+        .then((response) => {
+          this.error_message = response.data.message;
+          this.color = "green";
+          this.snackbar = true;
+          this.imageStoreURL_SKCK = response.data.data;
+          this.form.url_skck = response.data.data;
+          this.overlayDialogTambahEdit = false;
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.overlayDialogTambahEdit = false;
+        });
     },
   },
   computed: {

@@ -201,8 +201,8 @@ export default {
       hari: "Selasa",
       shift: 1,
       form: {
-        id_pegawai: null,
-        id_jadwal: null,
+        id_pegawai: "",
+        id_jadwal: "",
       },
       deleteId: "",
       deleteHari: "",
@@ -432,8 +432,8 @@ export default {
     },
     resetForm() {
       this.form = {
-        id_pegawai: null,
-        id_jadwal: null,
+        id_pegawai: "",
+        id_jadwal: "",
       };
     },
   },

@@ -74,67 +74,120 @@
           <v-container>
             <v-row>
               <v-col>
-                <v-autocomplete label="Nama Pemilik Mobil" v-model="form.id_pemilik_mobil"/>
+                <v-autocomplete
+                  label="Nama Pemilik Mobil"
+                  v-model="form.id_pemilik_mobil"
+                  :items="pemilik_mobils"
+                  item-value="id_pemilik_mobil"
+                  item-text="nama"
+                  :disabled="disabledPemilikMobil"
+                />
               </v-col>
             </v-row>
 
             <v-row>
               <v-col>
-                <v-text-field label="Nama Mobil" v-model="form.nama_mobil"></v-text-field>
+                <v-text-field
+                  label="Nama Mobil"
+                  v-model="form.nama_mobil"
+                ></v-text-field>
               </v-col>
               <v-col>
-                <v-text-field label="Tipe Mobil" v-model="form.tipe_mobil"></v-text-field>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col>
-                <v-text-field label="Jenis Transmisi" v-model="form.jenis_transmisi"></v-text-field>
-              </v-col>
-              <v-col>
-                <v-text-field label="Jenis Bahan Bakar" v-model="form.jenis_bahan_bakar"></v-text-field>
+                <v-text-field
+                  label="Tipe Mobil"
+                  v-model="form.tipe_mobil"
+                ></v-text-field>
               </v-col>
             </v-row>
 
             <v-row>
               <v-col>
-                <v-text-field label="Warna Mobil" v-model="form.warna_mobil"></v-text-field>
+                <v-text-field
+                  label="Jenis Transmisi"
+                  v-model="form.jenis_transmisi"
+                ></v-text-field>
               </v-col>
               <v-col>
-                <v-text-field label="Volume Bagasi" v-model="form.volume_bagasi"></v-text-field>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col>
-                <v-textarea label="Fasilitas" v-model="form.fasilitas"></v-textarea>
-              </v-col>
-              <v-col>
-                <v-text-field label="Kapasitas Penumpang" v-model="form.kapasitas_penumpang"></v-text-field>
+                <v-text-field
+                  label="Jenis Bahan Bakar"
+                  v-model="form.jenis_bahan_bakar"
+                ></v-text-field>
               </v-col>
             </v-row>
 
             <v-row>
               <v-col>
-                <v-text-field label="Plat Nomor" v-model="form.plat_nomor"></v-text-field>
+                <v-text-field
+                  label="Warna Mobil"
+                  v-model="form.warna_mobil"
+                ></v-text-field>
               </v-col>
               <v-col>
-                <v-text-field label="Nomor STNK" v-model="form.nomor_stnk"></v-text-field>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col>
-                <v-select label="Kategori Aset" v-model="form.kategori_aset" />
-              </v-col>
-              <v-col>
-                <v-text-field label="Harga Sewa" v-model="form.harga_sewa"></v-text-field>
+                <v-text-field
+                  label="Volume Bagasi"
+                  v-model="form.volume_bagasi"
+                ></v-text-field>
               </v-col>
             </v-row>
 
             <v-row>
               <v-col>
-                <v-select label="Status Sewa" v-model="form.status_sewa" />
+                <v-textarea
+                  label="Fasilitas"
+                  v-model="form.fasilitas"
+                ></v-textarea>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  label="Kapasitas Penumpang"
+                  v-model="form.kapasitas_penumpang"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-text-field
+                  label="Plat Nomor"
+                  v-model="form.plat_nomor"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  label="Nomor STNK"
+                  v-model="form.nomor_stnk"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-select
+                  label="Kategori Aset"
+                  v-model="form.kategori_aset"
+                  :items="kategoris"
+                  item-value="kategori"
+                  item-text="kategori"
+                  @change="checkKategori"
+                />
+              </v-col>
+              <v-col>
+                <v-text-field
+                  label="Harga Sewa"
+                  v-model="form.harga_sewa"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-select
+                  label="Status Sewa"
+                  v-model="form.status_sewa"
+                  :items="statuses"
+                  item-value="status"
+                  item-text="status"
+                />
               </v-col>
               <v-col>
                 <v-menu
@@ -172,6 +225,7 @@
                   transition="scale-transition"
                   offset-y
                   min-width="auto"
+                  :disabled="disabledPeriodeKontrakMulai"
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
@@ -181,11 +235,13 @@
                       readonly
                       v-bind="attrs"
                       v-on="on"
+                      :disabled="disabledPeriodeKontrakMulai"
                     ></v-text-field>
                   </template>
                   <v-date-picker
                     v-model="form.periode_kontrak_mulai"
                     @input="menuPeriodeKontrakMulai = false"
+                    :disabled="disabledPeriodeKontrakMulai"
                   ></v-date-picker>
                 </v-menu>
               </v-col>
@@ -197,6 +253,7 @@
                   transition="scale-transition"
                   offset-y
                   min-width="auto"
+                  :disabled="disabledPeriodeKontrakAkhir"
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
@@ -206,11 +263,13 @@
                       readonly
                       v-bind="attrs"
                       v-on="on"
+                      :disabled="disabledPeriodeKontrakAkhir"
                     ></v-text-field>
                   </template>
                   <v-date-picker
                     v-model="form.periode_kontrak_akhir"
                     @input="menuPeriodeKontrakAkhir = false"
+                    :disabled="disabledPeriodeKontrakAkhir"
                   ></v-date-picker>
                 </v-menu>
               </v-col>
@@ -262,7 +321,7 @@
             <v-row>
               <v-col>
                 <v-menu
-                  v-model="menuPeriodeKontrakMulai"
+                  v-model="menuPeriodeKontrakMulai2"
                   :close-on-content-click="false"
                   :nudge-right="40"
                   transition="scale-transition"
@@ -281,13 +340,13 @@
                   </template>
                   <v-date-picker
                     v-model="form.periode_kontrak_mulai"
-                    @input="menuPeriodeKontrakMulai = false"
+                    @input="menuPeriodeKontrakMulai2 = false"
                   ></v-date-picker>
                 </v-menu>
               </v-col>
               <v-col>
                 <v-menu
-                  v-model="menuPeriodeKontrakAkhir"
+                  v-model="menuPeriodeKontrakAkhir2"
                   :close-on-content-click="false"
                   :nudge-right="40"
                   transition="scale-transition"
@@ -306,7 +365,7 @@
                   </template>
                   <v-date-picker
                     v-model="form.periode_kontrak_akhir"
-                    @input="menuPeriodeKontrakAkhir = false"
+                    @input="menuPeriodeKontrakAkhir2 = false"
                   ></v-date-picker>
                 </v-menu>
               </v-col>
@@ -356,9 +415,14 @@ export default {
   name: "List",
   data() {
     return {
+      disabledPemilikMobil: false,
+      disabledPeriodeKontrakMulai: false,
+      disabledPeriodeKontrakAkhir: false,
       menuTanggalTerakhirKaliServis: false,
       menuPeriodeKontrakMulai: false,
       menuPeriodeKontrakAkhir: false,
+      menuPeriodeKontrakMulai2: false,
+      menuPeriodeKontrakAkhir2: false,
       overlayDialogTambahEdit: false,
       overlayDialogDelete: false,
       overlay: false,
@@ -463,33 +527,83 @@ export default {
       mobil: new FormData(),
       mobils: [],
       form: {
-        id_pemilik_mobil: null,
-        nama_mobil: null,
-        tipe_mobil: null,
-        jenis_transmisi: null,
-        jenis_bahan_bakar: null,
-        warna_mobil: null,
-        volume_bagasi: null,
-        fasilitas: null,
-        kapasitas_penumpang: null,
-        plat_nomor: null,
-        nomor_stnk: null,
-        kategori_aset: null,
-        harga_sewa: null,
-        status_sewa: null,
-        tanggal_terakhir_kali_servis: null,
-        periode_kontrak_mulai: null,
-        periode_kontrak_akhir: null,
-        url_foto: null,
+        id_pemilik_mobil: "",
+        nama_mobil: "",
+        tipe_mobil: "",
+        jenis_transmisi: "",
+        jenis_bahan_bakar: "",
+        warna_mobil: "",
+        volume_bagasi: "",
+        fasilitas: "",
+        kapasitas_penumpang: "",
+        plat_nomor: "",
+        nomor_stnk: "",
+        kategori_aset: "",
+        harga_sewa: "",
+        status_sewa: "",
+        tanggal_terakhir_kali_servis: "",
+        periode_kontrak_mulai: "",
+        periode_kontrak_akhir: "",
+        url_foto: "",
       },
       deleteId: "",
       editId: "",
       image: undefined,
       imageStoreURL: "",
       b64_foto: "",
+      kategoris: [
+        {
+          id: 1,
+          kategori: "Aset Mitra",
+        },
+        {
+          id: 2,
+          kategori: "Aset Perusahaan",
+        },
+      ],
+      statuses: [
+        {
+          id: 1,
+          status: "Available",
+        },
+        {
+          id: 2,
+          status: "Not Available",
+        },
+      ],
+      pemilik_mobils: [],
     };
   },
   methods: {
+    enablePerusahaan() {
+      this.disabledPemilikMobil = false;
+      this.disabledPeriodeKontrakMulai = false;
+      this.disabledPeriodeKontrakAkhir = false;
+      if (this.form.id_pemilik_mobil == null) {
+        this.form.id_pemilik_mobil = "";
+      }
+      if (this.form.periode_kontrak_mulai == null) {
+        this.form.periode_kontrak_mulai = "";
+      }
+      if (this.form.periode_kontrak_akhir == null) {
+        this.form.periode_kontrak_akhir = "";
+      }
+    },
+    disablePerusahaan() {
+      this.form.id_pemilik_mobil = null;
+      this.form.periode_kontrak_mulai = null;
+      this.form.periode_kontrak_akhir = null;
+      this.disabledPemilikMobil = true;
+      this.disabledPeriodeKontrakMulai = true;
+      this.disabledPeriodeKontrakAkhir = true;
+    },
+    checkKategori() {
+      if (this.form.kategori_aset == "Aset Perusahaan") {
+        this.disablePerusahaan();
+      } else if (this.form.kategori_aset == "Aset Mitra") {
+        this.enablePerusahaan();
+      }
+    },
     setForm() {
       if (this.inputType !== "Tambah") {
         this.update();
@@ -501,6 +615,7 @@ export default {
     readData() {
       this.overlay = true;
       var url = this.$api + "/keloladata/mobil";
+      var urlPemilikMobil = this.$api + "/keloladata/pemilikmobil";
       this.$http
         .get(url, {
           headers: {
@@ -509,6 +624,14 @@ export default {
         })
         .then((response) => {
           this.mobils = response.data.data;
+          return this.$http.get(urlPemilikMobil, {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          });
+        })
+        .then((response) => {
+          this.pemilik_mobils = response.data.data;
           this.overlay = false;
         })
         .catch((error) => {
@@ -553,7 +676,7 @@ export default {
           this.overlayDialogTambahEdit = false;
         });
     },
-    // Ubah data Course
+
     update() {
       let newData = {
         id_pemilik_mobil: this.form.id_pemilik_mobil,
@@ -575,7 +698,7 @@ export default {
         periode_kontrak_akhir: this.form.periode_kontrak_akhir,
         url_foto: this.form.url_foto,
       };
-      var url = this.$api + "/keloladata/mobil/update" + this.editId;
+      var url = this.$api + "/keloladata/mobil/update/" + this.editId;
       this.load = true;
       this.overlayDialogTambahEdit = true;
       this.$http
@@ -590,10 +713,11 @@ export default {
           this.snackbar = true;
           this.load = false;
           this.overlayDialogTambahEdit = false;
-          this.close();
-          this.readData();
-          this.resetForm();
-          this.inputType = "Tambah";
+          //   this.close();
+          //   this.readData();
+          //   this.resetForm();
+          //   this.inputType = "Tambah";
+          location.reload();
         })
         .catch((error) => {
           this.error_message = error.response.data.message;
@@ -604,7 +728,6 @@ export default {
         });
     },
 
-    // Hapus data produk
     deleteData() {
       var url = this.$api + "/keloladata/mobil/delete/" + this.deleteId;
       this.load = true;
@@ -656,6 +779,7 @@ export default {
       this.form.periode_kontrak_mulai = item.periode_kontrak_mulai;
       this.form.periode_kontrak_akhir = item.periode_kontrak_akhir;
       this.form.url_foto = item.url_foto;
+      this.checkKategori();
       if (!this.kontrakAkanHabis) {
         //nampilin dialog update mobil biasa
         this.dialog = true;
@@ -673,36 +797,40 @@ export default {
       this.dialog2 = false;
       this.inputType = "Tambah";
       this.dialogConfirm = false;
+      this.kontrakAkanHabis = false;
+      this.enablePerusahaan();
       this.readData();
     },
     cancel() {
+      this.enablePerusahaan();
       this.resetForm();
       this.readData();
       this.dialog = false;
       this.dialog2 = false;
       this.dialogConfirm = false;
+      this.kontrakAkanHabis = false;
       this.inputType = "Tambah";
     },
     resetForm() {
       this.form = {
-        id_pemilik_mobil: null,
-        nama_mobil: null,
-        tipe_mobil: null,
-        jenis_transmisi: null,
-        jenis_bahan_bakar: null,
-        warna_mobil: null,
-        volume_bagasi: null,
-        fasilitas: null,
-        kapasitas_penumpang: null,
-        plat_nomor: null,
-        nomor_stnk: null,
-        kategori_aset: null,
-        harga_sewa: null,
-        status_sewa: null,
-        tanggal_terakhir_kali_servis: null,
-        periode_kontrak_mulai: null,
-        periode_kontrak_akhir: null,
-        url_foto: null,
+        id_pemilik_mobil: "",
+        nama_mobil: "",
+        tipe_mobil: "",
+        jenis_transmisi: "",
+        jenis_bahan_bakar: "",
+        warna_mobil: "",
+        volume_bagasi: "",
+        fasilitas: "",
+        kapasitas_penumpang: "",
+        plat_nomor: "",
+        nomor_stnk: "",
+        kategori_aset: "",
+        harga_sewa: "",
+        status_sewa: "",
+        tanggal_terakhir_kali_servis: "",
+        periode_kontrak_mulai: "",
+        periode_kontrak_akhir: "",
+        url_foto: "",
       };
     },
     change() {
