@@ -59,6 +59,26 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+         <v-dialog v-model="dialog2" persistent max-width="600px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">{{ formTitle }}</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container>
+                        <v-text-field v-model="form.nama_kelas" label="Nama Kelas" required></v-text-field>
+                        <v-text-field v-model="form.kode" label="Kode" required></v-text-field>
+                        <v-text-field v-model="form.biaya_pendaftaran" label="Biaya Pendaftaran" required></v-text-field>
+                        <v-text-field v-model="form.kapasitas" label="Kapasitas" required></v-text-field>
+                    </v-container>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" text @click="cancel">Cancel</v-btn>
+                        <v-btn color="blue darken-1" text @click="setForm">Save</v-btn>
+                    </v-card-actions>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
         <v-dialog v-model="dialogConfirm" persistent max-width="400px">
             <v-card>
                 <v-card-title>
@@ -216,7 +236,13 @@
                }).then(response => {
                    this.mobils = response.data.data;
                    this.overlay = false;
-               })
+               }).catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.load = false;
+          this.overlay = false;
+        });
            },
            // Simpan data Course
            save() {
@@ -276,6 +302,7 @@
                    this.load = false;
                })
            },
+          
            // Hapus data produk
            deleteData() {
                var url = this.$api + '/keloladata/mobil/delete/' + this.deleteId;
@@ -301,6 +328,23 @@
                })
            },
            editHandler(item) {
+               if(!this.kontrakAkanHabis) { //nampilin dialog update mobil biasa
+                   this.inputType = 'Ubah';
+                    this.editId = item.id;
+                    this.form.nama_kelas = item.nama_kelas;
+                    this.form.kode = item.kode;
+                    this.form.biaya_pendaftaran = item.biaya_pendaftaran;
+                    this.form.kapasitas = item.kapasitas;
+                    this.dialog = true;
+               } else { // nampilin dialog update mobil kontrak akan habis
+                   this.inputType = 'Ubah';
+                    this.editId = item.id;
+                    this.form.nama_kelas = item.nama_kelas;
+                    this.form.kode = item.kode;
+                    this.form.biaya_pendaftaran = item.biaya_pendaftaran;
+                    this.form.kapasitas = item.kapasitas;
+                    this.dialog2 = true;
+               }
                this.inputType = 'Ubah';
                this.editId = item.id;
                this.form.nama_kelas = item.nama_kelas;

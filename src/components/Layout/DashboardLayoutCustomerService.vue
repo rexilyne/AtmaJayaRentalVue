@@ -65,11 +65,11 @@ export default {
           title: "Jadwal Kerja",
           to: "/customerservice/jadwal"
         },
-        {
-          icon: "mdi-face",
-          title: "List Customer",
-          to: "/customerservice/data/customer",
-        },
+        // {
+        //   icon: "mdi-face",
+        //   title: "List Customer",
+        //   to: "/customerservice/data/customer",
+        // },
       ],
     };
   },

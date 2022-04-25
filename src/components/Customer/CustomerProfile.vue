@@ -158,6 +158,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{
+      error_message
+    }}</v-snackbar>
     <v-overlay :value="overlay"><v-progress-circular
         indeterminate
         size="64"
@@ -223,6 +226,13 @@ export default {
           this.no_telp = response.data.data.no_telp;
           this.url_sim = response.data.data.url_sim;
           this.url_kartu_identitas = response.data.data.url_kartu_identitas;
+          this.load = false;
+          this.overlay = false;
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
           this.load = false;
           this.overlay = false;
         });

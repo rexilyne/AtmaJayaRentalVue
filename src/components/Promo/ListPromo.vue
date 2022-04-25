@@ -89,6 +89,9 @@
           </v-card-actions>
         </v-card-text>
       </v-card>
+      <v-overlay :value="overlayDialogTambahEdit"
+        ><v-progress-circular indeterminate size="64"></v-progress-circular
+      ></v-overlay>
     </v-dialog>
     <v-dialog v-model="dialogConfirm" persistent max-width="400px">
       <v-card>
@@ -104,6 +107,9 @@
           <v-btn color="blue darken-1" text @click="deleteData">Delete</v-btn>
         </v-card-actions>
       </v-card>
+      <v-overlay :value="overlayDialogDelete"
+        ><v-progress-circular indeterminate size="64"></v-progress-circular
+      ></v-overlay>
     </v-dialog>
     <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{
       error_message
@@ -119,6 +125,8 @@ export default {
   name: "List",
   data() {
     return {
+      overlayDialogTambahEdit: false,
+      overlayDialogDelete: false,
       overlay: false,
       inputType: "Tambah",
       load: false,
@@ -204,19 +212,26 @@ export default {
         .then((response) => {
           this.promos = response.data.data;
           this.overlay = false;
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.load = false;
+          this.overlay = false;
         });
     },
 
     save() {
-      this.promo.append('kode_promo', this.form.kode_promo);
-      this.promo.append('jenis_promo', this.form.jenis_promo);
-      this.promo.append('keterangan', this.form.keterangan);
-      this.promo.append('diskon_promo', this.form.diskon_promo);
-      this.promo.append('status_promo', this.form.status_promo);
+      this.promo.append("kode_promo", this.form.kode_promo);
+      this.promo.append("jenis_promo", this.form.jenis_promo);
+      this.promo.append("keterangan", this.form.keterangan);
+      this.promo.append("diskon_promo", this.form.diskon_promo);
+      this.promo.append("status_promo", this.form.status_promo);
 
       var url = this.$api + "/keloladata/promo/store";
       this.load = true;
-      this.overlay = true;
+      this.overlayDialogTambahEdit = true;
       this.$http
         .post(url, this.promo, {
           headers: {
@@ -228,7 +243,7 @@ export default {
           this.color = "green";
           this.snackbar = true;
           this.load = false;
-          this.overlay = false;
+          this.overlayDialogTambahEdit = false;
           this.close();
           this.readData();
           this.resetForm();
@@ -238,7 +253,7 @@ export default {
           this.color = "red";
           this.snackbar = true;
           this.load = false;
-          this.overlay = false;
+          this.overlayDialogTambahEdit = false;
         });
     },
 
@@ -252,7 +267,7 @@ export default {
       };
       var url = this.$api + "/keloladata/promo/update/" + this.editId;
       this.load = true;
-      this.overlay = true;
+      this.overlayDialogTambahEdit = true;
       this.$http
         .put(url, newData, {
           headers: {
@@ -264,7 +279,7 @@ export default {
           this.color = "green";
           this.snackbar = true;
           this.load = false;
-          this.overlay = false;
+          this.overlayDialogTambahEdit = false;
           this.close();
           this.readData();
           this.resetForm();
@@ -275,14 +290,14 @@ export default {
           this.color = "red";
           this.snackbar = true;
           this.load = false;
-          this.overlay = false;
+          this.overlayDialogTambahEdit = false;
         });
     },
     // Hapus data produk
     deleteData() {
       var url = this.$api + "/keloladata/promo/delete/" + this.deleteId;
       this.load = true;
-      this.overlay = true;
+      this.overlayDialogDelete = true;
       this.$http
         .delete(url, {
           headers: {
@@ -294,7 +309,7 @@ export default {
           this.color = "green";
           this.snackbar = true;
           this.load = false;
-          this.overlay = false;
+          this.overlayDialogDelete = false;
           this.close();
           this.readData();
           this.resetForm();
@@ -305,7 +320,7 @@ export default {
           this.color = "red";
           this.snackbar = true;
           this.load = false;
-          this.overlay = false;
+          this.overlayDialogDelete = false;
         });
     },
     editHandler(item) {

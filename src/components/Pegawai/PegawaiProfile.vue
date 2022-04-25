@@ -198,6 +198,13 @@ export default {
           this.url_foto = response.data.data.url_foto;
           this.load = false;
           this.overlay = false;
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.load = false;
+          this.overlay = false;
         });
     },
 
