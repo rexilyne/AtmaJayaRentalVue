@@ -94,9 +94,12 @@
                     <v-text-field
                       label="Password"
                       v-model="password"
-                      type="password"
+                      :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                      :type="showPassword ? 'text' : 'password'"
+                      counter
                       :rules="passwordRules"
                       required
+                      @click:append="showPassword = !showPassword"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -104,25 +107,47 @@
                 <v-row>
                   <v-col cols="6">
                     <v-card>
-            <v-img
-              :src=url_sim
-              class="grey darken-4"
-            ></v-img>
-            <v-card-title class="text-h6">
-              SIM
-            </v-card-title>
-          </v-card>
+                      <v-img :src="url_sim" class="grey darken-4"></v-img>
+                      <v-card-title class="text-h6"> SIM </v-card-title>
+                    </v-card>
                   </v-col>
                   <v-col cols="6">
                     <v-card>
-            <v-img
-              :src=url_kartu_identitas
-              class="grey darken-4"
-            ></v-img>
-            <v-card-title class="text-h6">
-              Kartu Identitas
-            </v-card-title>
-          </v-card>
+                      <v-img
+                        :src="url_kartu_identitas"
+                        class="grey darken-4"
+                      ></v-img>
+                      <v-card-title class="text-h6">
+                        Kartu Identitas
+                      </v-card-title>
+                    </v-card>
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-col cols="6">
+                    <v-file-input
+                      v-model="image_SIM"
+                      type="file"
+                      class="input"
+                      label="Upload SIM"
+                      hint="Upload SIM"
+                      outlined
+                      dense
+                      @change="onFileChangeSIM"
+                    />
+                  </v-col>
+                  <v-col cols="6">
+                    <v-file-input
+                      v-model="image_kartu_identitas"
+                      type="file"
+                      class="input"
+                      label="Upload Kartu Identitas"
+                      hint="Upload Kartu Identitas"
+                      outlined
+                      dense
+                      @change="onFileChangeKartuIdentitas"
+                    />
                   </v-col>
                 </v-row>
 
@@ -161,10 +186,9 @@
     <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{
       error_message
     }}</v-snackbar>
-    <v-overlay :value="overlay"><v-progress-circular
-        indeterminate
-        size="64"
-      ></v-progress-circular></v-overlay>
+    <v-overlay :value="overlay"
+      ><v-progress-circular indeterminate size="64"></v-progress-circular
+    ></v-overlay>
   </v-main>
 </template>
 
@@ -173,15 +197,23 @@ export default {
   name: "Profile",
   data() {
     return {
-        overlay: false,
+      showPassword: false,
+      overlay: false,
       date: "",
       menu2: false,
+      image_SIM: undefined,
+      image_kartu_identitas: undefined,
+      b64_sim: "",
+      b64_kartu_identitas: "",
+      imageStoreURL_SIM: "",
+      imageStoreURL_kartu_identitas: "",
       dialogConfirm: false,
       load: false,
       snackbar: false,
       error_message: "",
       color: "",
       valid: false,
+      status_akun: "",
       alamat: "",
       tanggal_lahir: "",
       no_telp: "",
@@ -208,7 +240,7 @@ export default {
   },
   methods: {
     readData() {
-        this.overlay = true;
+      this.overlay = true;
       var url =
         this.$api + "/customer/show/" + localStorage.getItem("id_customer");
       this.$http
@@ -218,6 +250,7 @@ export default {
           },
         })
         .then((response) => {
+          this.status_akun = response.data.data.status_akun;
           this.name = response.data.data.nama;
           this.alamat = response.data.data.alamat;
           this.tanggal_lahir = response.data.data.tanggal_lahir;
@@ -240,12 +273,21 @@ export default {
 
     update() {
       let newData = {
-        name: this.name,
+        status_akun: this.status_akun,
+        nama: this.name,
+        alamat: this.alamat,
+        tanggal_lahir: this.tanggal_lahir,
+        jenis_kelamin: this.jeniskelamin,
         email: this.email,
+        no_telp: this.no_telp,
         password: this.password,
+        url_sim: this.url_sim,
+        url_kartu_identitas: this.url_kartu_identitas,
       };
-      var url = this.$api + "/user/" + localStorage.getItem("id");
+      var url =
+        this.$api + "/customer/update/" + localStorage.getItem("id_customer");
       this.load = true;
+      this.overlay = true;
       this.$http
         .put(url, newData, {
           headers: {
@@ -257,19 +299,23 @@ export default {
           this.color = "green";
           this.snackbar = true;
           this.load = false;
-          this.readData();
+          this.overlay = false;
+          location.reload();
         })
         .catch((error) => {
           this.error_message = error.response.data.message;
           this.color = "red";
           this.snackbar = true;
           this.load = false;
+          this.overlay = false;
         });
     },
-    // Hapus data produk
+
     deleteData() {
-      var url = this.$api + "/user/" + localStorage.getItem("id");
+      var url =
+        this.$api + "/customer/delete/" + localStorage.getItem("id_customer");
       this.load = true;
+      this.overlay = true;
       this.$http
         .delete(url, {
           headers: {
@@ -281,7 +327,7 @@ export default {
           this.color = "green";
           this.snackbar = true;
           this.load = false;
-          this.readData();
+          this.overlay = false;
           this.$router.push({
             name: "Welcome",
           });
@@ -291,10 +337,90 @@ export default {
           this.color = "red";
           this.snackbar = true;
           this.load = false;
+          this.overlay = false;
         });
     },
     deleteHandler() {
       this.dialogConfirm = true;
+    },
+
+    createImageSIM(file) {
+      const readerSIM = new FileReader();
+
+      readerSIM.onloadend = (e) => {
+        this.b64_sim = e.target.result;
+        this.getImageStorageURL_SIM(this.b64_sim);
+      };
+
+      readerSIM.readAsDataURL(file);
+    },
+    onFileChangeSIM(file) {
+      if (!file) {
+        return;
+      }
+      this.createImageSIM(file);
+    },
+    createImageKartuIdentitas(file) {
+      const readerKartuIdentitas = new FileReader();
+
+      readerKartuIdentitas.onloadend = (e) => {
+        this.b64_kartu_identitas = e.target.result;
+        this.getImageStorageURL_kartu_identitas(this.b64_kartu_identitas);
+      };
+
+      readerKartuIdentitas.readAsDataURL(file);
+    },
+    onFileChangeKartuIdentitas(file) {
+      if (!file) {
+        return;
+      }
+      this.createImageKartuIdentitas(file);
+    },
+    getImageStorageURL_SIM(img_url) {
+      this.overlay = true;
+      let newData = {
+        imgB64: img_url,
+      };
+      var url = this.$api + "/storeimage";
+      this.$http
+        .post(url, newData)
+        .then((response) => {
+          this.error_message = response.data.message;
+          this.color = "green";
+          this.snackbar = true;
+          this.imageStoreURL_SIM = response.data.data;
+          this.url_sim = response.data.data;
+          this.overlay = false;
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.overlay = false;
+        });
+    },
+    getImageStorageURL_kartu_identitas(img_url) {
+      this.overlay = true;
+      let newData = {
+        imgB64: img_url,
+      };
+      var url = this.$api + "/storeimage";
+      this.$http
+        .post(url, newData)
+        .then((response) => {
+          this.error_message = response.data.message;
+          this.color = "green";
+          this.snackbar = true;
+          this.imageStoreURL_kartu_identitas = response.data.data;
+          this.url_kartu_identitas = response.data.data;
+          this.overlay = false;
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.overlay = false;
+        });
     },
   },
 

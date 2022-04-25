@@ -163,6 +163,7 @@
                   item-value="id"
                   item-text="role"
                   label="Role"
+                  :disabled="disableRole"
                 />
               </v-col>
               <v-col cols="6">
@@ -222,6 +223,7 @@ export default {
   name: "List",
   data() {
     return {
+      disableRole: false,
       overlayDialogTambahEdit: false,
       overlayDialogDelete: false,
       overlay: false,
@@ -298,6 +300,7 @@ export default {
         no_telp: null,
         password: null,
         url_foto: null,
+        status_akun: null,
       },
       deleteId: "",
       editId: "",
@@ -403,6 +406,7 @@ export default {
     
     update() {
       let newData = {
+        status_akun: this.form.status_akun,
         id_role: this.form.id_role,
         nama: this.form.nama,
         alamat: this.form.alamat,
@@ -480,7 +484,9 @@ export default {
       this.form.tanggal_lahir = item.tanggal_lahir;
       this.form.email = item.email;
       this.form.url_foto = item.url_foto;
+      this.form.status_akun = item.status_akun;
       this.dialog = true;
+      this.disableRole = true;
     },
     deleteHandler(id) {
       this.deleteId = id;
@@ -490,6 +496,7 @@ export default {
       this.dialog = false;
       this.inputType = "Tambah";
       this.dialogConfirm = false;
+      this.disableRole = false;
       this.readData();
     },
     cancel() {
@@ -497,6 +504,7 @@ export default {
       this.readData();
       this.dialog = false;
       this.dialogConfirm = false;
+      this.disableRole = false;
       this.inputType = "Tambah";
     },
     resetForm() {
@@ -510,6 +518,7 @@ export default {
         no_telp: null,
         password: null,
         url_foto: null,
+        status_akun: null,
       };
       this.image = undefined;
     },

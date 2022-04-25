@@ -9,6 +9,7 @@
             >
             <v-card-text class="pt-4">
               <v-form v-model="valid" ref="form">
+
                 <v-row>
                   <v-col align="center">
                     <v-avatar size="96">
@@ -16,6 +17,7 @@
                     </v-avatar>
                   </v-col>
                 </v-row>
+                
                 <v-row>
                   <v-col>
                     <v-text-field
@@ -94,10 +96,28 @@
                     <v-text-field
                       label="Password"
                       v-model="password"
-                      type="password"
+                      :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                      :type="showPassword ? 'text' : 'password'"
+                      counter
                       :rules="passwordRules"
                       required
+                      @click:append="showPassword = !showPassword"
                     ></v-text-field>
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-col>
+                    <v-file-input
+                      v-model="image"
+                      type="file"
+                      class="input"
+                      label="Upload Foto"
+                      hint="Upload Foto"
+                      outlined
+                      dense
+                      @change="onFileChange"
+                    />
                   </v-col>
                 </v-row>
 
@@ -133,10 +153,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-overlay :value="overlay"><v-progress-circular
-        indeterminate
-        size="64"
-      ></v-progress-circular></v-overlay>
+    <v-overlay :value="overlay"
+      ><v-progress-circular indeterminate size="64"></v-progress-circular
+    ></v-overlay>
   </v-main>
 </template>
 
@@ -145,6 +164,7 @@ export default {
   name: "Profile",
   data() {
     return {
+      showPassword: false,
       overlay: false,
       date: "",
       menu2: false,
@@ -154,10 +174,14 @@ export default {
       error_message: "",
       color: "",
       valid: false,
+      status_akun: "",
       alamat: "",
       tanggal_lahir: "",
       no_telp: "",
+      image: undefined,
+      imageStoreURL: "",
       url_foto: "",
+      b64_foto: "",
       jeniskelamin: "Laki-laki",
       jeniskelamins: [
         {
@@ -189,6 +213,7 @@ export default {
           },
         })
         .then((response) => {
+          this.status_akun = response.data.data.status_akun;
           this.name = response.data.data.nama;
           this.alamat = response.data.data.alamat;
           this.tanggal_lahir = response.data.data.tanggal_lahir;
@@ -210,12 +235,21 @@ export default {
 
     update() {
       let newData = {
-        name: this.name,
+        status_akun: this.status_akun,
+        id_role: localStorage.getItem("id_role"),
+        nama: this.name,
+        alamat: this.alamat,
+        tanggal_lahir: this.tanggal_lahir,
+        jenis_kelamin: this.jeniskelamin,
         email: this.email,
+        no_telp: this.no_telp,
         password: this.password,
+        url_foto: this.url_foto,
       };
-      var url = this.$api + "/user/" + localStorage.getItem("id");
+      var url =
+        this.$api + "/pegawai/update/" + localStorage.getItem("id_pegawai");
       this.load = true;
+      this.overlay = true;
       this.$http
         .put(url, newData, {
           headers: {
@@ -227,19 +261,23 @@ export default {
           this.color = "green";
           this.snackbar = true;
           this.load = false;
-          this.readData();
+          this.overlay = false;
+          location.reload();
         })
         .catch((error) => {
           this.error_message = error.response.data.message;
           this.color = "red";
           this.snackbar = true;
           this.load = false;
+          this.overlay = false;
         });
     },
-    // Hapus data produk
+
     deleteData() {
-      var url = this.$api + "/user/" + localStorage.getItem("id");
+      var url =
+        this.$api + "/pegawai/delete/" + localStorage.getItem("id_pegawai");
       this.load = true;
+      this.overlay = true;
       this.$http
         .delete(url, {
           headers: {
@@ -251,7 +289,7 @@ export default {
           this.color = "green";
           this.snackbar = true;
           this.load = false;
-          this.readData();
+          this.overlay = false;
           this.$router.push({
             name: "Welcome",
           });
@@ -261,10 +299,50 @@ export default {
           this.color = "red";
           this.snackbar = true;
           this.load = false;
+          this.overlay = false;
         });
     },
     deleteHandler() {
       this.dialogConfirm = true;
+    },
+    createImage(file) {
+      const reader = new FileReader();
+
+      reader.onloadend = (e) => {
+        this.b64_foto = e.target.result;
+        this.getImageStorageURL(this.b64_foto);
+      };
+
+      reader.readAsDataURL(file);
+    },
+    onFileChange(file) {
+      if (!file) {
+        return;
+      }
+      this.createImage(file);
+    },
+    getImageStorageURL(img_url) {
+      this.overlayDialogTambahEdit = true;
+      let newData = {
+        imgB64: img_url,
+      };
+      var url = this.$api + "/storeimage";
+      this.$http
+        .post(url, newData)
+        .then((response) => {
+          this.error_message = response.data.message;
+          this.color = "green";
+          this.snackbar = true;
+          this.imageStoreURL = response.data.data;
+          this.url_foto = response.data.data;
+          this.overlayDialogTambahEdit = false;
+        })
+        .catch((error) => {
+          this.error_message = error.response.data.message;
+          this.color = "red";
+          this.snackbar = true;
+          this.overlay = false;
+        });
     },
   },
 

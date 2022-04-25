@@ -17,10 +17,13 @@
                 ></v-text-field>
                 <v-text-field
                   label="Password"
-                  v-model="password"
-                  type="password"
-                  :rules="passwordRules"
-                  required
+                      v-model="password"
+                      :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                      :type="showPassword ? 'text' : 'password'"
+                      counter
+                      :rules="passwordRules"
+                      required
+                      @click:append="showPassword = !showPassword"
                 ></v-text-field>
                 <v-layout justify-center class="mt-4">
                   <v-btn block class="blue darken-1 white--text" @click="submit"
@@ -58,6 +61,7 @@ export default {
   name: "Login",
   data() {
     return {
+      showPassword: false,
       overlay: false,
       load: false,
       snackbar: false,
