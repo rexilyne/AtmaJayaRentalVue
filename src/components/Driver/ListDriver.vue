@@ -129,11 +129,13 @@
                       readonly
                       v-bind="attrs"
                       v-on="on"
+                       @change="setPassword"
                     ></v-text-field>
                   </template>
                   <v-date-picker
                     v-model="form.tanggal_lahir"
                     @input="menu2 = false"
+                     @change="setPassword"
                   ></v-date-picker>
                 </v-menu>
               </v-col>
@@ -189,6 +191,7 @@
                   counter
                   :rules="passwordRules"
                   required
+                  readonly
                   @click:append="showPassword = !showPassword"
                 ></v-text-field>
               </v-col>
@@ -300,6 +303,225 @@
         ><v-progress-circular indeterminate size="64"></v-progress-circular
       ></v-overlay>
     </v-dialog>
+
+
+    <v-dialog v-model="dialog2" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">{{ formTitle }}</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  label="Nama"
+                  v-model="form.nama"
+                  :rules="nameRules"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  label="Alamat"
+                  v-model="form.alamat"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-menu
+                  v-model="menu3"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="form.tanggal_lahir"
+                      label="Tanggal Lahir"
+                      prepend-inner-icon="mdi-calendar"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="form.tanggal_lahir"
+                    @input="menu3 = false"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col>
+                <v-select
+                  v-model="form.jenis_kelamin"
+                  :items="jeniskelamins"
+                  item-value="gender"
+                  item-text="gender"
+                  label="Jenis Kelamin"
+                />
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-text-field
+                  label="E-mail"
+                  v-model="form.email"
+                  :rules="emailRules"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  label="Nomor Telepon"
+                  v-model="form.no_telp"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-select label="Bahasa" 
+                v-model="form.bahasa"
+                  :items="bahasas"
+                  item-value="bahasa"
+                  item-text="bahasa"/>
+              </v-col>
+              <v-col>
+                <v-text-field label="Tarif Driver" v-model="form.tarif_driver"></v-text-field>
+              </v-col>
+            </v-row>
+
+            <!-- <v-row>
+              <v-col>
+                <v-text-field
+                  label="Password"
+                  v-model="form.password"
+                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="showPassword ? 'text' : 'password'"
+                  counter
+                  :rules="passwordRules"
+                  required
+                  @click:append="showPassword = !showPassword"
+                ></v-text-field>
+              </v-col>
+            </v-row> -->
+
+          <v-row>
+                  <v-col cols="6">
+                    <v-card>
+                      <v-img :src="form.url_sim" class="grey darken-4"></v-img>
+                      <v-card-title class="text-h6"> SIM </v-card-title>
+                    </v-card>
+                  </v-col>
+                  <v-col cols="6">
+                    <v-card>
+                      <v-img
+                        :src="form.url_surat_bebas_napza"
+                        class="grey darken-4"
+                      ></v-img>
+                      <v-card-title class="text-h6">
+                        Surat Bebas Napza
+                      </v-card-title>
+                    </v-card>
+                  </v-col>
+                </v-row>
+
+            <v-row>
+              <v-col>
+                <v-file-input
+                  v-model="image_SIM"
+                  type="file"
+                  class="input"
+                  label="Upload SIM"
+                  hint="Upload SIM"
+                  outlined
+                  dense
+                  @change="onFileChangeSIM"
+                />
+              </v-col>
+              <v-col>
+                <v-file-input
+                  v-model="image_surat_bebas_napza"
+                  type="file"
+                  class="input"
+                  label="Upload Surat Bebas Napza"
+                  hint="Upload Surat Bebas Napza"
+                  outlined
+                  dense
+                  @change="onFileChangeSuratBebasNapza"
+                />
+              </v-col>
+            </v-row>
+
+
+            <v-row>
+                  <v-col cols="6">
+                    <v-card>
+                      <v-img :src="form.url_surat_kesehatan_jiwa" class="grey darken-4"></v-img>
+                      <v-card-title class="text-h6"> Surat Kesehatan Jiwa </v-card-title>
+                    </v-card>
+                  </v-col>
+                  <v-col cols="6">
+                    <v-card>
+                      <v-img
+                        :src="form.url_skck"
+                        class="grey darken-4"
+                      ></v-img>
+                      <v-card-title class="text-h6">
+                        SKCK
+                      </v-card-title>
+                    </v-card>
+                  </v-col>
+                </v-row>
+
+            <v-row>
+              <v-col>
+                <v-file-input
+                  v-model="image_surat_kesehatan_jiwa"
+                  type="file"
+                  class="input"
+                  label="Upload Surat Kesehatan Jiwa"
+                  hint="Upload Surat Kesehatan Jiwa"
+                  outlined
+                  dense
+                  @change="onFileChangeSuratKesehatanJiwa"
+                />
+              </v-col>
+              <v-col>
+                <v-file-input
+                  v-model="image_skck"
+                  type="file"
+                  class="input"
+                  label="Upload SKCK"
+                  hint="Upload SKCK"
+                  outlined
+                  dense
+                  @change="onFileChangeSKCK"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="cancel">Cancel</v-btn>
+            <v-btn color="blue darken-1" text @click="setForm">Save</v-btn>
+          </v-card-actions>
+        </v-card-text>
+      </v-card>
+      <v-overlay :value="overlayDialogTambahEdit2"
+        ><v-progress-circular indeterminate size="64"></v-progress-circular
+      ></v-overlay>
+    </v-dialog>
+
+
+
     <v-dialog v-model="dialogConfirm" persistent max-width="400px">
       <v-card>
         <v-card-title>
@@ -334,7 +556,9 @@ export default {
     return {
       showPassword: false,
       menu2: false,
+      menu3: false,
       overlayDialogTambahEdit: false,
+      overlayDialogTambahEdit2: false,
       overlayDialogDelete: false,
       overlay: false,
       inputType: "Tambah",
@@ -344,6 +568,7 @@ export default {
       color: "",
       search: null,
       dialog: false,
+      dialog2: false,
       dialogConfirm: false,
       headers: [
         {
@@ -477,6 +702,9 @@ export default {
     };
   },
   methods: {
+    setPassword() {
+      this.form.password = this.form.tanggal_lahir;
+    },
     setForm() {
       if (this.inputType !== "Tambah") {
         this.update();
@@ -541,7 +769,7 @@ export default {
           this.error_message = response.data.message;
           this.color = "green";
           this.snackbar = true;
-          this.load = true;
+          this.load = false;
           this.overlayDialogTambahEdit = false;
           this.close();
           this.readData();
@@ -577,7 +805,7 @@ export default {
       };
       var url = this.$api + "/keloladata/driver/update/" + this.editId;
       this.load = true;
-      this.overlayDialogTambahEdit = true;
+      this.overlayDialogTambahEdit2 = true;
       this.$http
         .put(url, newData, {
           headers: {
@@ -589,7 +817,7 @@ export default {
           this.color = "green";
           this.snackbar = true;
           this.load = false;
-          this.overlayDialogTambahEdit = false;
+          this.overlayDialogTambahEdit2 = false;
           // this.close();
           // this.readData();
           // this.resetForm();
@@ -601,7 +829,7 @@ export default {
           this.color = "red";
           this.snackbar = true;
           this.load = false;
-          this.overlayDialogTambahEdit = false;
+          this.overlayDialogTambahEdit2 = false;
         });
     },
 
@@ -652,7 +880,7 @@ export default {
       this.form.url_surat_bebas_napza = item.url_surat_bebas_napza;
       this.form.url_surat_kesehatan_jiwa = item.url_surat_kesehatan_jiwa;
       this.form.url_skck = item.url_skck;
-      this.dialog = true;
+      this.dialog2 = true;
     },
     deleteHandler(id) {
       this.deleteId = id;
@@ -673,22 +901,22 @@ export default {
     },
     resetForm() {
       this.form = {
-        status_akun: null,
-        nama: null,
-        alamat: null,
-        tanggal_lahir: null,
-        jenis_kelamin: null,
-        email: null,
-        no_telp: null,
-        bahasa: null,
-        status_driver: null,
-        password: null,
-        tarif_driver: null,
-        rerata_rating: null,
-        url_sim: null,
-        url_surat_bebas_napza: null,
-        url_surat_kesehatan_jiwa: null,
-        url_skck: null,
+        status_akun: "",
+        nama: "",
+        alamat: "",
+        tanggal_lahir: "",
+        jenis_kelamin: "",
+        email: "",
+        no_telp: "",
+        bahasa: "",
+        status_driver: "",
+        password: "",
+        tarif_driver: "",
+        rerata_rating: "",
+        url_sim: "",
+        url_surat_bebas_napza: "",
+        url_surat_kesehatan_jiwa: "",
+        url_skck: "",
       };
     },
 

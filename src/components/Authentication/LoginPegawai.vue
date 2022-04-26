@@ -76,10 +76,10 @@ export default {
   },
   methods: {
     submit() {
-      this.overlay = true;
       if (this.$refs.form.validate()) {
         // cek validasi data yang terkirim
         this.load = true;
+        this.overlay = true;
         this.$http
           .post(this.$api + "/login/pegawai", {
             email: this.email,

@@ -191,6 +191,139 @@
         ><v-progress-circular indeterminate size="64"></v-progress-circular
       ></v-overlay>
     </v-dialog>
+
+    <v-dialog v-model="dialog2" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">{{ formTitle }}</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  label="Nama"
+                  v-model="form.nama"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  label="Alamat"
+                  v-model="form.alamat"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-menu
+                  v-model="menu3"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="form.tanggal_lahir"
+                      label="Tanggal Lahir"
+                      prepend-inner-icon="mdi-calendar"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      @change="setPassword"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="form.tanggal_lahir"
+                    @input="menu3 = false"
+                    @change="setPassword"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
+              <v-col>
+                <v-select
+                  v-model="form.jenis_kelamin"
+                  :items="jeniskelamins"
+                  item-value="gender"
+                  item-text="gender"
+                  label="Jenis Kelamin"
+                />
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col>
+                <v-text-field
+                  label="E-mail"
+                  v-model="form.email"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  label="Nomor Telepon"
+                  v-model="form.no_telp"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <!-- <v-row>
+              <v-col>
+                <v-text-field
+                  label="Password"
+                  v-model="form.password"
+                  type="password"
+                  hint="Tanggal Lahir (YYYY-mm-dd)"
+                  persistent-hint
+                  readonly
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row> -->
+
+            <v-row>
+              <v-col cols="6">
+                <v-select
+                  v-model="form.id_role"
+                  :items="roles"
+                  item-value="id"
+                  item-text="role"
+                  label="Role"
+                  :disabled="disableRole"
+                />
+              </v-col>
+              <v-col cols="6">
+                <v-file-input
+                  v-model="image"
+                  type="file"
+                  class="input"
+                  label="Upload Foto"
+                  hint="Upload Foto"
+                  outlined
+                  dense
+                  @change="onFileChange"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="cancel">Cancel</v-btn>
+            <v-btn color="blue darken-1" text @click="setForm">Save</v-btn>
+          </v-card-actions>
+        </v-card-text>
+      </v-card>
+      <v-overlay :value="overlayDialogTambahEdit2"
+        ><v-progress-circular indeterminate size="64"></v-progress-circular
+      ></v-overlay>
+    </v-dialog>
+
+
     <v-dialog v-model="dialogConfirm" persistent max-width="400px">
       <v-card>
         <v-card-title>
@@ -225,10 +358,12 @@ export default {
     return {
       disableRole: false,
       overlayDialogTambahEdit: false,
+      overlayDialogTambahEdit2: false,
       overlayDialogDelete: false,
       overlay: false,
       date: "",
       menu2: false,
+      menu3: false,
       image: undefined,
       imageStoreURL: "",
       url_foto: "",
@@ -239,6 +374,7 @@ export default {
       color: "",
       search: null,
       dialog: false,
+      dialog2: false,
       dialogConfirm: false,
       headers: [
         {
@@ -419,7 +555,7 @@ export default {
       };
       var url = this.$api + "/keloladata/pegawai/update/" + this.editId;
       this.load = true;
-      this.overlayDialogTambahEdit = true;
+      this.overlayDialogTambahEdit2 = true;
       this.$http
         .put(url, newData, {
           headers: {
@@ -431,7 +567,7 @@ export default {
           this.color = "green";
           this.snackbar = true;
           this.load = false;
-          this.overlayDialogTambahEdit = false;
+          this.overlayDialogTambahEdit2 = false;
           this.close();
           this.readData();
           this.resetForm();
@@ -442,12 +578,12 @@ export default {
           this.color = "red";
           this.snackbar = true;
           this.load = false;
-          this.overlayDialogTambahEdit = false;
+          this.overlayDialogTambahEdit2 = false;
         });
     },
     
     deleteData() {
-      var url = this.$api + "/keloladata/pegawai/delete" + this.deleteId;
+      var url = this.$api + "/keloladata/pegawai/delete/" + this.deleteId;
       this.load = true;
       this.overlayDialogDelete = true;
       this.$http
@@ -483,9 +619,11 @@ export default {
       this.form.alamat = item.alamat;
       this.form.tanggal_lahir = item.tanggal_lahir;
       this.form.email = item.email;
+      this.form.no_telp = item.no_telp;
       this.form.url_foto = item.url_foto;
       this.form.status_akun = item.status_akun;
-      this.dialog = true;
+      this.form.password = item.password;
+      this.dialog2 = true;
       this.disableRole = true;
     },
     deleteHandler(id) {
@@ -494,6 +632,7 @@ export default {
     },
     close() {
       this.dialog = false;
+      this.dialog2 = false;
       this.inputType = "Tambah";
       this.dialogConfirm = false;
       this.disableRole = false;
@@ -503,6 +642,7 @@ export default {
       this.resetForm();
       this.readData();
       this.dialog = false;
+      this.dialog2 = false;
       this.dialogConfirm = false;
       this.disableRole = false;
       this.inputType = "Tambah";

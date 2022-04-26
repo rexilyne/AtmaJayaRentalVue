@@ -151,12 +151,12 @@
               </v-form>
             </v-card-text>
           </v-card>
-          <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{
-            error_message
-          }}</v-snackbar>
         </v-flex>
       </v-layout>
     </v-container>
+    <v-snackbar v-model="snackbar" :color="color" timeout="2000" bottom>{{
+            error_message
+          }}</v-snackbar>
     <v-overlay :value="overlay"><v-progress-circular
         indeterminate
         size="64"
@@ -210,18 +210,18 @@ export default {
       this.password = this.tanggal_lahir;
     },
     submit() {
-      this.overlay = true;
       if (this.$refs.form.validate()) {
         // cek validasi data yang terkirim
         this.load = true;
+        this.overlay = true;
         this.$http
           .post(this.$api + "/register/customer", {
             nama: this.name,
             alamat: this.alamat,
             tanggal_lahir: this.tanggal_lahir,
             jenis_kelamin: this.jeniskelamin,
-            no_telp: this.no_telp,
             email: this.email,
+            no_telp: this.no_telp,
             password: this.password,
             url_sim: this.imageStoreURL_SIM,
             url_kartu_identitas: this.imageStoreURL_kartu_identitas

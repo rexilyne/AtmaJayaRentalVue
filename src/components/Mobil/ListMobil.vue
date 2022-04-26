@@ -527,7 +527,7 @@ export default {
       mobil: new FormData(),
       mobils: [],
       form: {
-        id_pemilik_mobil: "",
+        id_pemilik_mobil: null,
         nama_mobil: "",
         tipe_mobil: "",
         jenis_transmisi: "",
@@ -542,8 +542,8 @@ export default {
         harga_sewa: "",
         status_sewa: "",
         tanggal_terakhir_kali_servis: "",
-        periode_kontrak_mulai: "",
-        periode_kontrak_akhir: "",
+        periode_kontrak_mulai: null,
+        periode_kontrak_akhir: null,
         url_foto: "",
       },
       deleteId: "",
@@ -580,13 +580,13 @@ export default {
       this.disabledPeriodeKontrakMulai = false;
       this.disabledPeriodeKontrakAkhir = false;
       if (this.form.id_pemilik_mobil == null) {
-        this.form.id_pemilik_mobil = "";
+        this.form.id_pemilik_mobil = null;
       }
       if (this.form.periode_kontrak_mulai == null) {
-        this.form.periode_kontrak_mulai = "";
+        this.form.periode_kontrak_mulai = null;
       }
       if (this.form.periode_kontrak_akhir == null) {
-        this.form.periode_kontrak_akhir = "";
+        this.form.periode_kontrak_akhir = null;
       }
     },
     disablePerusahaan() {
@@ -644,10 +644,24 @@ export default {
     },
 
     save() {
-      this.mobil.append("nama_kelas", this.form.nama_kelas);
-      this.mobil.append("kode", this.form.kode);
-      this.mobil.append("biaya_pendaftaran", this.form.biaya_pendaftaran);
-      this.mobil.append("kapasitas", this.form.kapasitas);
+      this.mobil.append("id_pemilik_mobil", this.form.id_pemilik_mobil);
+      this.mobil.append("nama_mobil", this.form.nama_mobil);
+      this.mobil.append("tipe_mobil", this.form.tipe_mobil);
+      this.mobil.append("jenis_transmisi", this.form.jenis_transmisi);
+      this.mobil.append("jenis_bahan_bakar", this.form.jenis_bahan_bakar);
+      this.mobil.append("warna_mobil", this.form.warna_mobil);
+      this.mobil.append("volume_bagasi", this.form.volume_bagasi);
+      this.mobil.append("fasilitas", this.form.fasilitas);
+      this.mobil.append("kapasitas_penumpang", this.form.kapasitas_penumpang);
+      this.mobil.append("plat_nomor", this.form.plat_nomor);
+      this.mobil.append("nomor_stnk", this.form.nomor_stnk);
+      this.mobil.append("kategori_aset", this.form.kategori_aset);
+      this.mobil.append("harga_sewa", this.form.harga_sewa);
+      this.mobil.append("status_sewa", this.form.status_sewa);
+      this.mobil.append("tanggal_terakhir_kali_servis", this.form.tanggal_terakhir_kali_servis);
+      this.mobil.append("periode_kontrak_mulai", this.form.periode_kontrak_mulai);
+      this.mobil.append("periode_kontrak_akhir", this.form.periode_kontrak_akhir);
+      this.mobil.append("url_foto", this.form.url_foto);
 
       var url = this.$api + "/keloladata/mobil/store";
       this.load = true;
@@ -813,7 +827,7 @@ export default {
     },
     resetForm() {
       this.form = {
-        id_pemilik_mobil: "",
+        id_pemilik_mobil: null,
         nama_mobil: "",
         tipe_mobil: "",
         jenis_transmisi: "",
@@ -828,8 +842,8 @@ export default {
         harga_sewa: "",
         status_sewa: "",
         tanggal_terakhir_kali_servis: "",
-        periode_kontrak_mulai: "",
-        periode_kontrak_akhir: "",
+        periode_kontrak_mulai: null,
+        periode_kontrak_akhir: null,
         url_foto: "",
       };
     },

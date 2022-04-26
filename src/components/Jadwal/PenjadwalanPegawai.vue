@@ -21,6 +21,11 @@
         :search="search"
         :loading="load"
       >
+      <template v-slot:[`item.id_role`]="{ item }">
+          <div v-if="item.id_role === 1">Manager</div>
+          <div v-if="item.id_role === 2">Administrasi</div>
+          <div v-if="item.id_role === 3">Customer Service</div>
+        </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon
             aria-label="update"
@@ -145,6 +150,10 @@ export default {
           align: "start",
           sortable: true,
           value: "nama",
+        },
+        {
+            text: "Role",
+            value: "id_role"
         },
         {
           text: "Hari",
