@@ -73,6 +73,22 @@ const router = new VueRouter({
                     meta: { title: 'Customer Profile' },
                     component: importComponent('Customer/CustomerProfile')
                 },
+
+                // Make Penyewaan
+                {
+                    path: '/customer/makepenyewaan',
+                    name: 'Make Penyewaan',
+                    meta: { title: 'Make Penyewaan' },
+                    component: importComponent('Penyewaan/MakePenyewaan')
+                },
+
+                // Nota Penyewaan
+                {
+                    path: '/customer/notapenyewaan',
+                    name: 'Nota Penyewaan',
+                    meta: { title: 'Nota Penyewaan' },
+                    component: importComponent('Penyewaan/NotaPenyewaan')
+                }
             ]
         },
 
@@ -192,8 +208,30 @@ const router = new VueRouter({
                 {
                     path: '/customerservice/jadwal',
                     name: 'Jadwal Customer Service',
-                    meta: { title: 'Jadwal Customer Service'},
+                    meta: { title: 'Jadwal Customer Service' },
                     component: importComponent('Jadwal/ListShiftPegawai')
+                },
+
+                // Verifikasi Penyewaan
+                {
+                    path: '/customerservice/verifikasipenyewaan',
+                    name: 'Verifikasi Penyewaan Customer Service',
+                    meta: { title: 'Verifikasi Penyewaan Customer Service' },
+                    component: importComponent('Penyewaan/VerifikasiPenyewaan')
+                }
+            ]
+        },
+
+        {
+            path: '/print',
+            component: importComponent('Layout/PrintLayout'),
+            children: [
+                // Print Nota Penyewaan
+                {
+                    path: '/print/notapenyewaan',
+                    name: 'Print Nota Penyewaan',
+                    meta: { title: 'Print Nota Penyewaan' },
+                    component: importComponent('Penyewaan/CetakNotaPenyewaan')
                 }
             ]
         },

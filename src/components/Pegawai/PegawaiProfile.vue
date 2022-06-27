@@ -86,6 +86,7 @@
                     <v-text-field
                       label="Nomor Telepon"
                       v-model="no_telp"
+                      :rules="noTelpRules"
                       required
                     ></v-text-field>
                   </v-col>
@@ -178,6 +179,7 @@ export default {
       alamat: "",
       tanggal_lahir: "",
       no_telp: "",
+      noTelpRules: [(v) => !!v || "Required"],
       image: undefined,
       imageStoreURL: "",
       url_foto: "",

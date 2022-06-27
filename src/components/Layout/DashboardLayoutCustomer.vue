@@ -60,6 +60,16 @@ export default {
           title: "Profile",
           to: "/customer/profile",
         },
+        {
+          icon: "mdi-car-key",
+          title: "Buat Penyewaan",
+          to: "/customer/makepenyewaan"
+        },
+        {
+          icon: "mdi-information",
+          title: "Informasi Penyewaan",
+          to: "/customer/notapenyewaan"
+        },
       ],
     };
   },
